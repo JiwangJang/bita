@@ -1,8 +1,8 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
-class CameraPage extends StatelessWidget {
-  const CameraPage({required this.controller, super.key});
+class CameraUI extends StatelessWidget {
+  const CameraUI({required this.controller, super.key});
 
   final CameraController controller;
   @override
