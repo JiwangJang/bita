@@ -19,8 +19,9 @@ class _CameraState extends State<Camera> {
   void initState() {
     super.initState();
     final List<CameraDescription> cameras =
-        Provider.of<PhotosModel>(context, listen: false).getCameras();
-    _controller = CameraController(cameras.first, ResolutionPreset.max);
+        Provider.of<PhotosModel>(context, listen: false).cameras;
+    _controller = CameraController(cameras.first, ResolutionPreset.veryHigh,
+        enableAudio: false);
     controllerFuture = _controller.initialize();
   }
 
@@ -32,23 +33,46 @@ class _CameraState extends State<Camera> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: '출장사진 저장소',
-      debugShowCheckedModeBanner: false,
-      home: SafeArea(
-        child: FutureBuilder(
-          future: controllerFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return CameraUI(controller: _controller);
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+    return FutureBuilder(
+      future: controllerFuture,
+      builder: (context, snapshot) {
+        try {
+          // 카메라 권한을 얻었을때
+          if (snapshot.connectionState == ConnectionState.done) {
+            Provider.of<PhotosModel>(context, listen: false)
+                .setController(_controller);
+            return const CameraUI();
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        } catch (e) {
+          if (e is CameraException) {
+            // 카메라 권한이 없을때
+            late String errorMsg;
+            switch (e.code) {
+              case 'CameraAccessDenied':
+              case 'CameraAccessDeniedWithoutPrompt':
+                errorMsg = '앱을 사용하시기 위해선, 카메라 권한 허용이 필수입니다. 설정에서 허용해주세요';
+                break;
+              case 'CameraAccessRestricted':
+                errorMsg = '앱 사용이 불가능한 기기입니다';
+                break;
+              default:
+                errorMsg = '에러코드 : ${e.code}. 개발자에게 보여주세요.';
             }
-          },
-        ),
-      ),
+
+            return Center(
+              child: Text(errorMsg),
+            );
+          } else {
+            return const Center(
+              child: Text('개발자에게 문의하세요'),
+            );
+          }
+        }
+      },
     );
   }
 }

@@ -1,16 +1,13 @@
-# btia_app
+할 일
 
-A new Flutter project.
+사진들
 
-## Getting Started
+-   삭제기능
+-   업로드버튼
+-   업로드기능
 
-This project is a starting point for a Flutter application.
+나의코드
 
-A few resources to get you started if this is your first Flutter project:
+-   처음에 앱깔면, 나의코드 부여
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+서버에 저장되는 이미지 파일 이름 -> (uuid)-(사용자 코드)
