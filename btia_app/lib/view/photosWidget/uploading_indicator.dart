@@ -11,9 +11,12 @@ class UploadingIndicator extends StatelessWidget {
       builder: (context, data, child) {
         if (data.isUploading) {
           return Container(
-            color: Colors.white,
+            color: const Color.fromRGBO(0, 0, 0, 0.5),
             child: const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 5,
+              ),
             ),
           );
         }

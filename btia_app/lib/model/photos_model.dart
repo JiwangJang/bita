@@ -13,6 +13,7 @@ class PhotosModel extends ChangeNotifier {
   double curZoomLevel = 1.0;
   bool isFlashAuto = false;
   bool isUploading = false;
+  late String deleteTarget;
 
   void setController(CameraController newController) {
     controller = newController;
@@ -62,9 +63,13 @@ class PhotosModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeImage(String imageId) {
-    photos.removeWhere((element) => element['id'] == imageId);
+  void removeImage() {
+    photos.removeWhere((element) => element['id'] == deleteTarget);
     notifyListeners();
+  }
+
+  void setDeleteImage(String imageId) {
+    deleteTarget = imageId;
   }
 
   Future<bool> uploadImages() async {
@@ -73,6 +78,6 @@ class PhotosModel extends ChangeNotifier {
     await Future.delayed(const Duration(seconds: 2));
     isUploading = false;
     notifyListeners();
-    return true;
+    return false;
   }
 }

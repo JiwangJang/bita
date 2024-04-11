@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PhotoListView extends StatelessWidget {
-  const PhotoListView({super.key});
+  const PhotoListView({required this.modalOnFunc, super.key});
+
+  final Function modalOnFunc;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,9 @@ class PhotoListView extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   itemCount: photoData.photos.length,
                   itemBuilder: (context, idx) {
-                    return Photo(imageInfo: photoData.photos[idx]);
+                    return Photo(
+                        imageInfo: photoData.photos[idx],
+                        modalOnFunc: modalOnFunc);
                   }),
             ),
           ],

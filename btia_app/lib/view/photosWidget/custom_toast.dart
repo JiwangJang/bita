@@ -17,8 +17,24 @@ class CustomToast extends StatelessWidget {
           color: const Color.fromRGBO(255, 166, 102, 1)),
       child: Column(
         children: [
-          Text(mainMessage),
-          Text(subMessage),
+          Text(
+            mainMessage,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              height: 1,
+            ),
+          ),
+          Text(
+            subMessage,
+            style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+                height: 1,
+                letterSpacing: -0.05),
+          ),
         ],
       ),
     );

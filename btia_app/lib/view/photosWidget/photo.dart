@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Photo extends StatelessWidget {
-  const Photo({required this.imageInfo, super.key});
+  const Photo({required this.imageInfo, required this.modalOnFunc, super.key});
 
   final Map<String, dynamic> imageInfo;
+  final Function modalOnFunc;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,8 @@ class Photo extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 Provider.of<PhotosModel>(context, listen: false)
-                    .removeImage(imageInfo['id']);
+                    .setDeleteImage(imageInfo['id']);
+                modalOnFunc();
               },
               child: Container(
                 width: 36,

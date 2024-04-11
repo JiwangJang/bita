@@ -1,4 +1,5 @@
 import 'package:btia_app/view/custom_appbar.dart';
+import 'package:btia_app/view/photosWidget/confirm_modal.dart';
 import 'package:btia_app/view/photosWidget/custom_toast.dart';
 import 'package:btia_app/view/photosWidget/photolist_view.dart';
 import 'package:btia_app/view/photosWidget/upload_btn.dart';
@@ -38,6 +39,12 @@ class _PhotosState extends State<Photos> {
     });
   }
 
+  void modalOff() {
+    setState(() {
+      modal = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +55,10 @@ class _PhotosState extends State<Photos> {
         ),
         body: Stack(
           children: [
-            const Positioned.fill(child: PhotoListView()),
+            Positioned.fill(
+                child: PhotoListView(
+              modalOnFunc: modalOn,
+            )),
             Positioned(
               bottom: 0,
               left: 0,
@@ -60,20 +70,27 @@ class _PhotosState extends State<Photos> {
             const Positioned.fill(
               child: UploadingIndicator(),
             ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: AnimatedContainer(
-                duration: const Duration(microseconds: 2000),
-                curve: Curves.linear,
-                transform: Matrix4.translationValues(0, toast ? 0 : -100, 0),
+            Positioned.fill(
+              child: modal
+                  ? ConfirmModal(
+                      cancelFunc: modalOff,
+                    )
+                  : const SizedBox(),
+            ),
+            AnimatedPositioned(
+                left: 0,
+                right: 0,
+                bottom: toast ? 20 : -100,
+                duration: const Duration(milliseconds: 500),
                 onEnd: () {
-                  Future.delayed(const Duration(seconds: 5))
+                  Future.delayed(const Duration(seconds: 3))
                       .then((value) => toastOff());
                 },
-              ),
-            ),
+                curve: Curves.easeInOut,
+                child: CustomToast(
+                  mainMessage: toastMainMessage,
+                  subMessage: toastSubMessage,
+                )),
           ],
         ));
   }
