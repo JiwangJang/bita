@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:btia_app/model/photos_model.dart';
+import 'package:btia_app/util/get_random_id.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +33,8 @@ class CameraBottomBar extends StatelessWidget {
                   clipBehavior: Clip.hardEdge,
                   child: data.photos.isEmpty
                       ? const SizedBox()
-                      : Image.memory(data.photos.last, fit: BoxFit.cover),
+                      : Image.memory(data.photos.last['image'],
+                          fit: BoxFit.cover),
                 ),
               ),
               CustomtakePictureBtn(controller: controller),
@@ -51,22 +52,36 @@ class CameraBottomBar extends StatelessWidget {
   }
 }
 
-class CustomtakePictureBtn extends StatelessWidget {
+class CustomtakePictureBtn extends StatefulWidget {
   const CustomtakePictureBtn({required this.controller, super.key});
-
   final CameraController controller;
+
+  @override
+  State<CustomtakePictureBtn> createState() => _CustomtakePictureBtnState();
+}
+
+class _CustomtakePictureBtnState extends State<CustomtakePictureBtn> {
+  bool isPicture = false;
 
   @override
   Widget build(BuildContext context) {
     return Consumer<PhotosModel>(builder: (_, photoData, child) {
       return GestureDetector(
         onTap: () async {
+          if (isPicture) return;
+          setState(() {
+            isPicture = true;
+          });
           HapticFeedback.heavyImpact();
-          await controller.initialize();
-          XFile xFile = await controller.takePicture();
+          await widget.controller.initialize();
+          XFile xFile = await widget.controller.takePicture();
+          setState(() {
+            isPicture = false;
+          });
           String path = xFile.path;
           Uint8List byteImage = await File(path).readAsBytes();
-          photoData.addImage(byteImage);
+          String imageId = getRandomId();
+          photoData.addImage(imageId, byteImage);
         },
         child: Container(
           width: 80,

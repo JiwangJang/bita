@@ -13,7 +13,8 @@ class CameraUI extends StatelessWidget {
       children: [
         Expanded(
           child: Stack(
-            alignment: Alignment.topCenter,
+            alignment: Alignment.center,
+            fit: StackFit.expand,
             children: [
               CameraBody(),
               Positioned.fill(child: FocusIndicator()),

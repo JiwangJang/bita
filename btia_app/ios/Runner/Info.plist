@@ -46,6 +46,11 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>take a picture</string>
+	<string>앱사용을 위해 필수입니다</string>
+	<key>LSApplicationQueriesSchemes</key>
+  	<array>
+    <string>https</string>
+    <string>http</string>
+  </array>
 </dict>
 </plist>

@@ -1,11 +1,11 @@
-import 'dart:typed_data';
-
+import 'package:btia_app/model/photos_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Photo extends StatelessWidget {
-  const Photo({required this.image, super.key});
+  const Photo({required this.imageInfo, super.key});
 
-  final Uint8List image;
+  final Map<String, dynamic> imageInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -13,21 +13,27 @@ class Photo extends StatelessWidget {
       children: [
         Positioned.fill(
             child: Image.memory(
-          image,
+          imageInfo['image'],
           fit: BoxFit.cover,
         )),
         Positioned(
             top: 8,
             right: 8,
-            child: Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(9999)),
-              child: const Icon(
-                Icons.delete_forever_rounded,
-                color: Colors.white,
+            child: GestureDetector(
+              onTap: () {
+                Provider.of<PhotosModel>(context, listen: false)
+                    .removeImage(imageInfo['id']);
+              },
+              child: Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(9999)),
+                child: const Icon(
+                  Icons.delete_forever_rounded,
+                  color: Colors.white,
+                ),
               ),
             )),
       ],

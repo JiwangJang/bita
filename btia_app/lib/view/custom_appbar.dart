@@ -22,7 +22,7 @@ class CustomAppbar extends StatelessWidget {
           ),
         ),
         Positioned(
-            left: 20,
+            left: 12,
             top: 20,
             child: GestureDetector(
               onTap: () => context.pop(),

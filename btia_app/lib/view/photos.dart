@@ -1,63 +1,80 @@
-import 'package:btia_app/model/photos_model.dart';
 import 'package:btia_app/view/custom_appbar.dart';
-import 'package:btia_app/view/photosWidget/photo.dart';
+import 'package:btia_app/view/photosWidget/custom_toast.dart';
+import 'package:btia_app/view/photosWidget/photolist_view.dart';
+import 'package:btia_app/view/photosWidget/upload_btn.dart';
+import 'package:btia_app/view/photosWidget/uploading_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class Photos extends StatelessWidget {
+class Photos extends StatefulWidget {
   const Photos({super.key});
+
+  @override
+  State<Photos> createState() => _PhotosState();
+}
+
+class _PhotosState extends State<Photos> {
+  bool toast = false;
+  bool modal = false;
+  String toastMainMessage = '';
+  String toastSubMessage = '';
+
+  void toastOn(String mainMessage, String subMessage) {
+    setState(() {
+      toast = true;
+      toastMainMessage = mainMessage;
+      toastSubMessage = subMessage;
+    });
+  }
+
+  void toastOff() {
+    setState(() {
+      toast = false;
+    });
+  }
+
+  void modalOn() {
+    setState(() {
+      modal = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(49, 51, 48, 1),
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(80),
-        child: CustomAppbar(title: '사진들'),
-      ),
-      body: Consumer<PhotosModel>(builder: (_, photoData, child) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 8,
+        backgroundColor: const Color.fromRGBO(49, 51, 48, 1),
+        appBar: const PreferredSize(
+          preferredSize: Size.fromHeight(80),
+          child: CustomAppbar(title: '사진들'),
+        ),
+        body: Stack(
+          children: [
+            const Positioned.fill(child: PhotoListView()),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: UploadBtn(
+                toastOnFunc: toastOn,
               ),
-              const Text(
-                '사진업로드는 한번에 최대 10장까지 가능합니다',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    letterSpacing: -0.05,
-                    fontWeight: FontWeight.w800),
+            ),
+            const Positioned.fill(
+              child: UploadingIndicator(),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: AnimatedContainer(
+                duration: const Duration(microseconds: 2000),
+                curve: Curves.linear,
+                transform: Matrix4.translationValues(0, toast ? 0 : -100, 0),
+                onEnd: () {
+                  Future.delayed(const Duration(seconds: 5))
+                      .then((value) => toastOff());
+                },
               ),
-              Text(
-                '현재 : ${photoData.photos.length}/10',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: -0.05,
-                ),
-              ),
-              Expanded(
-                child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 8,
-                      mainAxisSpacing: 8,
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    itemCount: photoData.photos.length,
-                    itemBuilder: (context, idx) {
-                      return Photo(image: photoData.photos[idx]);
-                    }),
-              ),
-            ],
-          ),
-        );
-      }),
-    );
+            ),
+          ],
+        ));
   }
 }

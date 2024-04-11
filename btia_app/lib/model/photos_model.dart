@@ -1,17 +1,18 @@
 import 'dart:typed_data';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 class PhotosModel extends ChangeNotifier {
-  PhotosModel({required this.cameras});
+  PhotosModel({required this.cameras, required this.code});
+  final String code;
   final List<CameraDescription> cameras;
-  final List<Uint8List> photos = [];
+  final List<Map<String, dynamic>> photos = [];
   late CameraController controller;
   double minZoomLevel = 1.0;
   double maxZoomLevel = 1.0;
   double curZoomLevel = 1.0;
   bool isFlashAuto = false;
+  bool isUploading = false;
 
   void setController(CameraController newController) {
     controller = newController;
@@ -53,8 +54,25 @@ class PhotosModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addImage(Uint8List byteImage) {
-    photos.add(byteImage);
+  void addImage(String imageId, Uint8List byteImage) {
+    Map<String, dynamic> result = {};
+    result['id'] = imageId;
+    result['image'] = byteImage;
+    photos.add(result);
     notifyListeners();
+  }
+
+  void removeImage(String imageId) {
+    photos.removeWhere((element) => element['id'] == imageId);
+    notifyListeners();
+  }
+
+  Future<bool> uploadImages() async {
+    isUploading = true;
+    notifyListeners();
+    await Future.delayed(const Duration(seconds: 2));
+    isUploading = false;
+    notifyListeners();
+    return true;
   }
 }

@@ -8,7 +8,6 @@ class CameraUtil extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<PhotosModel>(builder: (_, data, child) {
-      print('object');
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Row(
