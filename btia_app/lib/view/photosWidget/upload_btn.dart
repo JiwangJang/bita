@@ -45,6 +45,9 @@ class UploadBtn extends StatelessWidget {
                     case 'appErr':
                       subMsg = '개발자에게 문의해주세요';
                       break;
+                    case 'serverErr':
+                      subMsg = '잠시후 다시 시도해보세요';
+                      break;
                     default:
                       subMsg = '잠시후 다시 시도해보세요';
                       break;

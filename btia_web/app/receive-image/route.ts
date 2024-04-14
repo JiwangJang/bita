@@ -1,35 +1,56 @@
 import { PutObjectCommand, PutObjectCommandOutput, S3Client } from "@aws-sdk/client-s3";
+import { QueryResult, sql } from "@vercel/postgres";
 import { NextRequest, NextResponse } from "next/server";
 
+export async function GET(req: NextRequest) {
+    const reqUserCode = req.nextUrl.searchParams.get("userCode");
+    const query = await sql`SELECT user_code from btia`;
+    const userCodeList = query.rows.map(({ user_code }) => user_code);
+    if (userCodeList.includes(reqUserCode)) {
+        // 있는 유저일 경우
+        return NextResponse.json({ exist: true });
+    } else {
+        // 없는 유저일 경우
+        return NextResponse.json({ exist: false });
+    }
+}
+
 export async function POST(req: NextRequest) {
-    const s3Client = new S3Client({
-        credentials: {
-            accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
-            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
-        },
-        region: process.env.S3_REGION,
-    });
-    const data = await req.formData();
-    const userCode = req.nextUrl.searchParams.get("userCode");
-    const imagePromise: Array<Promise<PutObjectCommandOutput>> = [];
-
-    data.forEach(async (form) => {
-        const file = form as File;
-        const buffer = Buffer.from(await file.arrayBuffer());
-        const command = new PutObjectCommand({
-            Bucket: process.env.S3_BUCKET,
-            Key: `btia/${file.name}-${userCode}`,
-            Body: buffer,
-            ContentType: file.type,
-        });
-        imagePromise.push(s3Client.send(command));
-    });
-
     try {
-        // await Promise.all(imagePromise);
+        const s3Client = new S3Client({
+            credentials: {
+                accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
+                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+            },
+            region: process.env.S3_REGION,
+        });
+        const data = await req.formData();
+        const userCode = req.nextUrl.searchParams.get("userCode");
+        const createdAt = req.nextUrl.searchParams.get("createdAt");
+        const imagePromise: Array<Promise<string>> = [...data].map(async ([_, imageFile]) => {
+            const file = imageFile as File;
+            const buffer = Buffer.from(await file.arrayBuffer());
+            const KEY = `btia/${file.name}-${userCode}`;
+            const command = new PutObjectCommand({
+                Bucket: process.env.S3_BUCKET,
+                Key: KEY,
+                Body: buffer,
+                ContentType: file.type,
+            });
+            await s3Client.send(command);
+            return KEY;
+        });
+        const imageResult = await Promise.all(imagePromise);
+        const queryPromise: Array<Promise<QueryResult>> = imageResult.map(
+            (key) => sql`INSERT INTO btia(user_code, image_path, created_at) VALUES(${userCode}, ${key}, ${createdAt})`
+        );
+        await Promise.all(queryPromise);
+
         return NextResponse.json({ success: true }, { status: 200 });
     } catch (e) {
         console.log(e);
         return NextResponse.json({ success: false }, { status: 500 });
     }
 }
+// 크론탭 이용해서 주기적으로 쿼리
+// DELETE FROM `table` WHERE `wdate` < DATE_SUB(NOW(), INTERVAL 7 DAY)

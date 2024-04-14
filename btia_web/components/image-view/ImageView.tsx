@@ -10,10 +10,5 @@ export default function ImageView() {
         if (saved !== null) setUserCode(saved);
     }, []);
 
-    return (
-        <div>
-            <input type="text" />
-            <button>입력</button>
-        </div>
-    );
+    return <div>{/* 스켈레톤 띄우는 방법 찾아보기 */}</div>;
 }

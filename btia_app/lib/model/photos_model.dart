@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:http_parser/src/media_type.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class PhotosModel extends ChangeNotifier {
   PhotosModel({required this.cameras, required this.code});
@@ -116,11 +117,12 @@ class PhotosModel extends ChangeNotifier {
     isUploading = true;
     notifyListeners();
     try {
-      Uri url =
-          Uri.parse('http://172.20.10.12:3000/receive-image?userCode=$code');
+      DateTime now = DateTime.now();
+      String createdAt = DateFormat('yyyy-MM-dd').format(now);
+      Uri url = Uri.parse(
+          'http://172.20.10.12:3000/receive-image?userCode=$code&createdAt=$createdAt');
       var request = http.MultipartRequest("POST", url);
       MediaType contentType = MediaType('image', 'jpeg');
-
       for (var imageInfo in photos) {
         var image = http.MultipartFile.fromBytes(
           'images',
@@ -137,6 +139,8 @@ class PhotosModel extends ChangeNotifier {
       if (response.statusCode == 200) {
         photos.clear();
         return {"success": true};
+      } else if (response.statusCode == 500) {
+        return {"success": false, "msg": "serverErr"};
       } else {
         return {"success": false, "msg": "appErr"};
       }
