@@ -1,100 +1,92 @@
-import 'dart:io';
+import 'dart:async';
 import 'package:btia_app/model/photos_model.dart';
-import 'package:btia_app/util/get_random_id.dart';
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class CameraBottomBar extends StatelessWidget {
+class CameraBottomBar extends StatefulWidget {
   const CameraBottomBar({super.key});
 
+  @override
+  State<CameraBottomBar> createState() => _CameraBottomBarState();
+}
+
+class _CameraBottomBarState extends State<CameraBottomBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.black,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      child: Consumer<PhotosModel>(builder: (context, data, child) {
-        CameraController controller = data.controller;
-        return Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Consumer<PhotosModel>(
+        builder: (context, data, child) {
+          return Stack(
             children: [
-              GestureDetector(
-                onTap: () => context.push('/photos'),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: const Color.fromRGBO(57, 57, 57, 1),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: () => context.push('/photos'),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: const Color.fromRGBO(57, 57, 57, 1),
+                      ),
+                      width: 64,
+                      height: 64,
+                      clipBehavior: Clip.hardEdge,
+                      child: data.photos.isEmpty
+                          ? const SizedBox()
+                          : Image.memory(data.photos.last['image'],
+                              fit: BoxFit.cover),
+                    ),
                   ),
-                  width: 64,
-                  height: 64,
-                  clipBehavior: Clip.hardEdge,
-                  child: data.photos.isEmpty
-                      ? const SizedBox()
-                      : Image.memory(data.photos.last['image'],
-                          fit: BoxFit.cover),
-                ),
+                  CustomtakePictureBtn(pictureFunc: data.takePicture),
+                  GestureDetector(
+                    onTap: () => context.push('/code'),
+                    child: const Icon(
+                      Icons.vpn_key_rounded,
+                      size: 64,
+                      color: Colors.white,
+                    ),
+                  )
+                ],
               ),
-              CustomtakePictureBtn(controller: controller),
-              GestureDetector(
-                onTap: () => context.push('/code'),
-                child: const Icon(
-                  Icons.vpn_key_rounded,
-                  size: 64,
-                  color: Colors.white,
-                ),
-              )
-            ]);
-      }),
+            ],
+          );
+        },
+      ),
     );
   }
 }
 
-class CustomtakePictureBtn extends StatefulWidget {
-  const CustomtakePictureBtn({required this.controller, super.key});
-  final CameraController controller;
-
-  @override
-  State<CustomtakePictureBtn> createState() => _CustomtakePictureBtnState();
-}
-
-class _CustomtakePictureBtnState extends State<CustomtakePictureBtn> {
-  bool isPicture = false;
+class CustomtakePictureBtn extends StatelessWidget {
+  const CustomtakePictureBtn({required this.pictureFunc, super.key});
+  final Future<void> Function() pictureFunc;
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PhotosModel>(builder: (_, photoData, child) {
-      return GestureDetector(
-        onTap: () async {
-          if (isPicture) return;
-          setState(() {
-            isPicture = true;
-          });
-          HapticFeedback.heavyImpact();
-          await widget.controller.initialize();
-          XFile xFile = await widget.controller.takePicture();
-          setState(() {
-            isPicture = false;
-          });
-          String path = xFile.path;
-          Uint8List byteImage = await File(path).readAsBytes();
-          String imageId = getRandomId();
-          photoData.addImage(imageId, byteImage);
-        },
-        child: Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-              border: Border.all(
-                  color: const Color.fromARGB(255, 255, 107, 0),
-                  width: 5,
-                  style: BorderStyle.solid),
-              borderRadius: BorderRadius.circular(100),
-              color: const Color.fromARGB(255, 255, 255, 255)),
-        ),
-      );
-    });
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        print('did');
+      },
+      child: Consumer<PhotosModel>(builder: (_, photoData, child) {
+        return GestureDetector(
+          onTap: () async => await pictureFunc(),
+          child: Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+                border: Border.all(
+                    color: const Color.fromARGB(255, 255, 107, 0),
+                    width: 5,
+                    style: BorderStyle.solid),
+                borderRadius: BorderRadius.circular(100),
+                color: const Color.fromARGB(255, 255, 255, 255)),
+          ),
+        );
+      }),
+    );
   }
 }

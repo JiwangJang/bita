@@ -1,4 +1,5 @@
 import 'package:btia_app/model/photos_model.dart';
+import 'package:btia_app/view/cameraWidget/camera_permission.dart';
 import 'package:btia_app/view/cameraWidget/camera_ui.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -27,52 +28,39 @@ class _CameraState extends State<Camera> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    Provider.of<PhotosModel>(context, listen: false).controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: controllerFuture,
-      builder: (context, snapshot) {
-        try {
-          // 카메라 권한을 얻었을때
-          if (snapshot.connectionState == ConnectionState.done) {
-            Provider.of<PhotosModel>(context, listen: false)
-                .setController(_controller);
-            return const CameraUI();
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        } catch (e) {
-          if (e is CameraException) {
-            // 카메라 권한이 없을때
-            late String errorMsg;
-            switch (e.code) {
-              case 'CameraAccessDenied':
-              case 'CameraAccessDeniedWithoutPrompt':
-                errorMsg = '앱을 사용하시기 위해선, 카메라 권한 허용이 필수입니다. 설정에서 허용해주세요';
-                break;
-              case 'CameraAccessRestricted':
-                errorMsg = '앱 사용이 불가능한 기기입니다';
-                break;
-              default:
-                errorMsg = '에러코드 : ${e.code}. 개발자에게 보여주세요.';
+    return Scaffold(
+      body: FutureBuilder(
+        future: controllerFuture,
+        builder: (futureContext, snapshot) {
+          try {
+            if (snapshot.connectionState == ConnectionState.done) {
+              // 카메라 권한이 막혀있을때
+              if (snapshot.error is CameraException) {
+                CameraException e = snapshot.error as CameraException;
+                return CameraPermission(errCode: e.code);
+              }
+              // 카메라 권한이 있을때
+              Provider.of<PhotosModel>(context, listen: false)
+                  .setController(_controller);
+              return const CameraUI();
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             }
-
-            return Center(
-              child: Text(errorMsg),
-            );
-          } else {
+          } catch (e) {
             return const Center(
               child: Text('개발자에게 문의하세요'),
             );
           }
-        }
-      },
+        },
+      ),
     );
   }
 }

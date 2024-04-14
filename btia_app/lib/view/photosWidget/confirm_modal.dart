@@ -1,6 +1,5 @@
 import 'package:btia_app/model/photos_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class ConfirmModal extends StatelessWidget {

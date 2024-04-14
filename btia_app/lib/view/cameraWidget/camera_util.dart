@@ -24,9 +24,7 @@ class CameraUtil extends StatelessWidget {
                   borderRadius: BorderRadius.circular(999)),
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () async {
-                  await data.toggleFlash();
-                },
+                onTap: () async => await data.toggleFlash(),
                 child: Icon(
                   data.isFlashAuto ? Icons.flash_auto : Icons.flash_off,
                   size: 44,
@@ -36,16 +34,14 @@ class CameraUtil extends StatelessWidget {
             ),
             // 배율초기화
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(999),
                 color: Colors.black,
               ),
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () async {
-                  await data.resetZoomLevel();
-                },
+                onTap: () async => await data.resetZoomLevel(),
                 child: const Text(
                   '배율초기화',
                   style: TextStyle(
@@ -72,7 +68,7 @@ class CameraUtil extends StatelessWidget {
                     fontSize: 28,
                     fontWeight: FontWeight.w900,
                     decoration: TextDecoration.none,
-                    letterSpacing: -3),
+                    letterSpacing: -1),
               ),
             ),
           ],

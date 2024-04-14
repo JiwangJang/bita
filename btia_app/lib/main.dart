@@ -24,7 +24,7 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/code',
       builder: (context, state) => const Code(),
-    )
+    ),
   ],
 );
 

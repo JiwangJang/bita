@@ -4,6 +4,7 @@ import 'package:btia_app/model/photos_model.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class FocusIndicator extends StatefulWidget {
@@ -19,30 +20,30 @@ class _FocusIndicatorState extends State<FocusIndicator> {
   bool isTouch = false;
   Timer? timerFunc;
 
-  void onViewFinderTap(LongPressDownDetails details, BoxConstraints constraints,
-      CameraController controller) {
-    if (timerFunc != null) {
-      timerFunc!.cancel();
-    }
+  Future<void> onViewFinderTap(LongPressDownDetails details,
+      BoxConstraints constraints, CameraController controller) async {
+    await controller.setFocusMode(FocusMode.locked);
     final offset = Offset(
       details.localPosition.dx / constraints.maxWidth,
       details.localPosition.dy / constraints.maxHeight,
     );
 
+    if (timerFunc != null) {
+      timerFunc!.cancel();
+    }
+    timerFunc = Timer(const Duration(seconds: 1), () {
+      setState(() {
+        isTouch = false;
+      });
+      timerFunc = null;
+    });
+    await controller.setExposurePoint(offset);
+    await controller.setFocusPoint(offset);
     setState(() {
       pointX = details.localPosition.dx - 32;
       pointY = details.localPosition.dy - 32;
       isTouch = true;
-      timerFunc = Timer(const Duration(seconds: 1), () {
-        setState(() {
-          isTouch = false;
-        });
-        timerFunc = null;
-      });
     });
-
-    controller.setExposurePoint(offset);
-    controller.setFocusPoint(offset);
   }
 
   @override
@@ -79,7 +80,7 @@ class _FocusIndicatorState extends State<FocusIndicator> {
                         borderRadius: BorderRadius.circular(9999)),
                   ),
                 ),
-              )
+              ),
             ],
           );
         });

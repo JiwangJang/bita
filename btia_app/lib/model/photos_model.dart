@@ -1,6 +1,11 @@
+import 'dart:io';
 import 'dart:typed_data';
+import 'package:btia_app/util/get_random_id.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/services.dart';
+import 'package:http_parser/src/media_type.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class PhotosModel extends ChangeNotifier {
   PhotosModel({required this.cameras, required this.code});
@@ -13,12 +18,50 @@ class PhotosModel extends ChangeNotifier {
   double curZoomLevel = 1.0;
   bool isFlashAuto = false;
   bool isUploading = false;
+  bool isTakingPicture = false;
+  bool pictureModal = false;
   late String deleteTarget;
 
   void setController(CameraController newController) {
     controller = newController;
     controller.getMaxZoomLevel().then((value) => maxZoomLevel = value);
     controller.getMinZoomLevel().then((value) => minZoomLevel = value);
+  }
+
+  Future<void> takePicture() async {
+    if (isTakingPicture) return;
+    if (photos.length >= 10) {
+      pictureModal = true;
+      notifyListeners();
+      Future.delayed(const Duration(seconds: 1)).then((value) {
+        pictureModal = false;
+        notifyListeners();
+      });
+      return;
+    }
+    isTakingPicture = true;
+
+    XFile xFile;
+    if (isFlashAuto) {
+      await controller.setFlashMode(FlashMode.torch);
+      xFile = await controller.takePicture();
+      await controller.setFlashMode(FlashMode.off);
+    } else {
+      await controller.setFlashMode(FlashMode.off);
+      xFile = await controller.takePicture();
+    }
+    await HapticFeedback.heavyImpact();
+    Uint8List imageBytes = File(xFile.path).readAsBytesSync();
+    String imageId = getRandomId();
+    addImage(imageId, imageBytes);
+
+    pictureModal = true;
+    isTakingPicture = false;
+    Future.delayed(const Duration(seconds: 1)).then((value) {
+      pictureModal = false;
+      notifyListeners();
+    });
+    notifyListeners();
   }
 
   Future<void> downZoomLevel() async {
@@ -40,17 +83,12 @@ class PhotosModel extends ChangeNotifier {
   }
 
   Future<void> resetZoomLevel() async {
-    curZoomLevel = minZoomLevel;
-    await controller.setZoomLevel(minZoomLevel);
+    curZoomLevel = 1.0;
+    await controller.setZoomLevel(curZoomLevel);
     notifyListeners();
   }
 
   Future<void> toggleFlash() async {
-    if (isFlashAuto) {
-      await controller.setFlashMode(FlashMode.off);
-    } else {
-      await controller.setFlashMode(FlashMode.auto);
-    }
     isFlashAuto = !isFlashAuto;
     notifyListeners();
   }
@@ -72,12 +110,43 @@ class PhotosModel extends ChangeNotifier {
     deleteTarget = imageId;
   }
 
-  Future<bool> uploadImages() async {
+  Future<Map<String, dynamic>> uploadImages() async {
+    if (photos.isEmpty) return {"success": false, "msg": "empty"};
+
     isUploading = true;
     notifyListeners();
-    await Future.delayed(const Duration(seconds: 2));
-    isUploading = false;
-    notifyListeners();
-    return false;
+    try {
+      Uri url =
+          Uri.parse('http://172.20.10.12:3000/receive-image?userCode=$code');
+      var request = http.MultipartRequest("POST", url);
+      MediaType contentType = MediaType('image', 'jpeg');
+
+      for (var imageInfo in photos) {
+        var image = http.MultipartFile.fromBytes(
+          'images',
+          imageInfo['image'],
+          contentType: contentType,
+          filename: imageInfo['id'],
+        );
+        request.files.add(image);
+      }
+      var response = await request.send();
+
+      isUploading = false;
+      notifyListeners();
+      if (response.statusCode == 200) {
+        photos.clear();
+        return {"success": true};
+      } else {
+        return {"success": false, "msg": "appErr"};
+      }
+    } catch (e) {
+      isUploading = false;
+      notifyListeners();
+      if (e is SocketException) {
+        return {"success": false, "msg": "network"};
+      }
+      return {"success": false, "msg": "appErr"};
+    }
   }
 }

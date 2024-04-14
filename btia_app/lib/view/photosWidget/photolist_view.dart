@@ -42,7 +42,7 @@ class PhotoListView extends StatelessWidget {
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
                   ),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  padding: const EdgeInsets.only(top: 10, bottom: 120),
                   itemCount: photoData.photos.length,
                   itemBuilder: (context, idx) {
                     return Photo(

@@ -28,15 +28,28 @@ class UploadBtn extends StatelessWidget {
               bgColor: const Color.fromRGBO(255, 107, 0, 1),
               btnTitle: "업로드",
               onTapFunc: () async {
-                bool result = await data.uploadImages();
+                Map<String, dynamic> result = await data.uploadImages();
                 late String mainMsg;
                 late String subMsg;
-                if (result) {
+                if (result['success']) {
                   mainMsg = '업로드에 성공했습니다';
                   subMsg = '사이트에서 확인해보세요!';
                 } else {
+                  switch (result['msg']) {
+                    case 'empty':
+                      subMsg = '우선 촬영부터 해주세요';
+                      break;
+                    case 'network':
+                      subMsg = '인터넷연결을 확인해주세요';
+                      break;
+                    case 'appErr':
+                      subMsg = '개발자에게 문의해주세요';
+                      break;
+                    default:
+                      subMsg = '잠시후 다시 시도해보세요';
+                      break;
+                  }
                   mainMsg = '업로드에 실패했습니다';
-                  subMsg = '잠시후 다시 시도해보세요';
                 }
                 toastOnFunc(mainMsg, subMsg);
               },
