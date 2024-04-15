@@ -152,3 +152,16 @@ input {
     opacity: 1;
     transform: translateY(0);
 }
+
+.skeleton {
+    animation: skeleton 1s infinite alternate ease-in-out;
+}
+
+@keyframes skeleton {
+    0% {
+        opacity: 0.2;
+    }
+    100% {
+        opacity: 1;
+    }
+}

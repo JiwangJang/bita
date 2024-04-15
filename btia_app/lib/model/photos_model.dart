@@ -120,7 +120,7 @@ class PhotosModel extends ChangeNotifier {
       DateTime now = DateTime.now();
       String createdAt = DateFormat('yyyy-MM-dd').format(now);
       Uri url = Uri.parse(
-          'http://172.20.10.12:3000/receive-image?userCode=$code&createdAt=$createdAt');
+          'http://172.20.10.2:3000/receive-image?userCode=$code&createdAt=$createdAt');
       var request = http.MultipartRequest("POST", url);
       MediaType contentType = MediaType('image', 'jpeg');
       for (var imageInfo in photos) {

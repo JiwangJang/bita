@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
     const reqUserCode = req.nextUrl.searchParams.get("userCode");
     const query = await sql`SELECT user_code from btia`;
-    const userCodeList = query.rows.map(({ user_code }) => user_code);
+    const userCodeList = query.rows.map(({ user_code }:{user_code : string}) => user_code);
     if (userCodeList.includes(reqUserCode)) {
         // 있는 유저일 경우
         return NextResponse.json({ exist: true });
