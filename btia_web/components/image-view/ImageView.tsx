@@ -3,7 +3,6 @@
 import { MouseEvent, useEffect, useState } from "react";
 import ImageSkeleton from "./ImageSkeleton";
 import ImageDashboard from "./ImageDashboard";
-import { useSearchParams } from "next/navigation";
 import SelectDownload from "./SelectDownload";
 import CodeForm from "../landing/codeForm";
 
@@ -31,6 +30,7 @@ export default function ImageView({ cookieUserCode }: { cookieUserCode: string }
     const [err, setErr] = useState<string>("");
 
     useEffect(() => {
+        document.body.style.overflow = "auto";
         if (!cookieUserCode && !userCode) {
             setCodeFormOn(true);
             return;

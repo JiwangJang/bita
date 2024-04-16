@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { ImageInfo } from "./ImageView";
 import ImageItem from "./ImageItem";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 
 function DashboardRow({ data }: { data: ImageInfo }) {
     const [download, setDownload] = useState(false);
@@ -14,11 +16,34 @@ function DashboardRow({ data }: { data: ImageInfo }) {
 
     const imageDownload = async () => {
         setDownload(true);
-        await new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(true);
-            }, 1000);
+        if (!Array.isArray(images)) return;
+        const imagePromises = images.map(async (imagePath) => {
+            const fetchData = await fetch(`https://waterfacilitybucket.s3.ap-northeast-2.amazonaws.com/${imagePath}`);
+            const blob = await fetchData.blob();
+            return blob;
         });
+        const imagesBlobs = await Promise.all(imagePromises);
+        if (confirm("압축파일로 다운받으시겠습니까?")) {
+            // 압축파일로
+            const zip = new JSZip();
+            imagesBlobs.forEach((imageBlob, index) => {
+                zip.file(`${YEAR}년 ${MONTH}월 ${DATE}일-${index}.jpg`, imageBlob);
+            });
+
+            const zipFile = await zip.generateAsync({ type: "blob" });
+            saveAs(zipFile, `${YEAR}년 ${MONTH}월 ${DATE}일 사진.zip`);
+        } else {
+            // 그냥 생으로
+            const objectUrls = imagesBlobs.map((blob) => URL.createObjectURL(blob));
+            const downloadA = document.createElement("a");
+
+            objectUrls.forEach((objectUrl, index) => {
+                downloadA.href = objectUrl;
+                downloadA.download = String(index + 1);
+                downloadA.click();
+            });
+        }
+
         setDownload(false);
     };
     return (
