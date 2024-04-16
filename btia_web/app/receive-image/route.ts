@@ -1,19 +1,7 @@
-import { PutObjectCommand, PutObjectCommandOutput, S3Client } from "@aws-sdk/client-s3";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { QueryResult, sql } from "@vercel/postgres";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-
-export async function GET(req: NextRequest) {
-    const reqUserCode = req.nextUrl.searchParams.get("userCode");
-    const query = await sql`SELECT user_code from btia`;
-    const userCodeList = query.rows.map(({ user_code }:{user_code : string}) => user_code);
-    if (userCodeList.includes(reqUserCode)) {
-        // 있는 유저일 경우
-        return NextResponse.json({ exist: true });
-    } else {
-        // 없는 유저일 경우
-        return NextResponse.json({ exist: false });
-    }
-}
 
 export async function POST(req: NextRequest) {
     try {

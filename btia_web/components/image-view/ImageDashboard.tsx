@@ -1,16 +1,23 @@
 "use client";
 
+import { MouseEvent } from "react";
+import DashboardRow from "./DashboardRow";
 import { ImageInfo } from "./ImageView";
 
-export default function ImageDashboard({ infoData }: { infoData: ImageInfo[] }) {
+export default function ImageDashboard({
+    infoData,
+    checkCounter,
+}: {
+    infoData: ImageInfo[];
+    checkCounter: (e: MouseEvent) => void;
+}) {
     return (
-        <div>
-            <a
-                href='https://waterfacilitybucket.s3.ap-northeast-2.amazonaws.com/btia/behqegu-wnlrilb-1562-6313'
-                download
-            >
-                다운
-            </a>
+        <div onClick={checkCounter}>
+            {infoData.length > 0 ? (
+                infoData.map((data, key) => <DashboardRow key={key} data={data} />)
+            ) : (
+                <div className="text-[32px] font-[700]">현재 업로드하신 사진이 없습니다. 우선 업로드부터 해주세요</div>
+            )}
         </div>
     );
 }
