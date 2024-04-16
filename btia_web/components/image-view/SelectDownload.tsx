@@ -8,36 +8,38 @@ function SelectDownload({ count }: { count: number }) {
     const [download, setDownload] = useState<boolean>(false);
 
     const imageDownload = async () => {
-        const selectedElems: NodeListOf<HTMLDivElement> = document.querySelectorAll(".check-circle.checked");
-        const selected = [...selectedElems].map((elem) => elem.getAttribute("data-image-path"));
         setDownload(true);
-        const imagePromises = selected.map(async (imagePath) => {
-            const fetchData = await fetch(`https://waterfacilitybucket.s3.ap-northeast-2.amazonaws.com/${imagePath}`);
-            const blob = await fetchData.blob();
-            return blob;
+        const selectedImgs: NodeListOf<HTMLImageElement> = document.querySelectorAll(".check-circle.checked~img");
+        const canvas = document.createElement("canvas");
+        const a = document.createElement("a");
+        const ctx = canvas.getContext("2d");
+
+        const base64Images = [...selectedImgs].map((imgElem) => {
+            canvas.width = imgElem.naturalWidth;
+            canvas.height = imgElem.naturalHeight;
+            ctx?.drawImage(imgElem, 0, 0);
+            return canvas.toDataURL("image/jpeg");
         });
-        const imagesBlobs = await Promise.all(imagePromises);
+
         if (confirm("압축파일로 다운받으시겠습니까?")) {
             // 압축파일로
             const zip = new JSZip();
-            imagesBlobs.forEach((imageBlob, index) => {
-                zip.file(`선택사진-${index}.jpg`, imageBlob);
+            base64Images.forEach((base64: string, index: number) => {
+                const e = base64.split(",")[1];
+                zip.file(`${index}.jpg`, e, { base64: true });
             });
+
             const zipFile = await zip.generateAsync({ type: "blob" });
-            saveAs(zipFile, `선택사진.zip`);
+            saveAs(zipFile, `선택한사진.zip`);
         } else {
             // 그냥 생으로
-            const objectUrls = imagesBlobs.map((blob) => URL.createObjectURL(blob));
-            const downloadA = document.createElement("a");
-
-            objectUrls.forEach((objectUrl, index) => {
-                downloadA.href = objectUrl;
-                downloadA.download = String(index + 1);
-                downloadA.click();
+            base64Images.forEach((base64: string, index: number) => {
+                a.href = base64;
+                a.download = `${index + 1}`;
+                a.click();
             });
         }
 
-        selectedElems.forEach((elem: HTMLDivElement) => elem.click());
         setDownload(false);
     };
 

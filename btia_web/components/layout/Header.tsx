@@ -19,11 +19,8 @@ export default function Header() {
                     <span className={`nav-item ${pathname === "/manual" ? "active" : ""}`}>
                         <Link href={"/manual"}>사용방법</Link>
                     </span>
-                    <span className={`nav-item ${pathname === "/about" ? "active" : ""}`}>
-                        <Link href={"/about"}>서비스소개</Link>
-                    </span>
-                    <span className={`nav-item ${pathname === "/contact" ? "active" : ""}`}>
-                        <Link href={"/contact"}>문의하기</Link>
+                    <span className={`nav-item ${pathname === "/introduce" ? "active" : ""}`}>
+                        <Link href={"/introduce"}>서비스소개</Link>
                     </span>
                 </nav>
             </div>

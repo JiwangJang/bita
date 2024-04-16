@@ -6,7 +6,6 @@ export async function GET(req: NextRequest) {
         const userCode = req.nextUrl.searchParams.get("userCode");
         const queryResult = await sql`SELECT * FROM btia WHERE user_code=${userCode};`;
         const notFilteredData = queryResult.rows;
-        console.log(userCode);
         const fileterdData = notFilteredData.reduce((acc, cur) => {
             const { created_at, image_path } = cur;
             if (!acc[created_at]) {
