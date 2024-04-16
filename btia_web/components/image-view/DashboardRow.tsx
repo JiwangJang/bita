@@ -5,6 +5,7 @@ import { ImageInfo } from "./ImageView";
 import ImageItem from "./ImageItem";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import { randomUUID } from "crypto";
 
 function DashboardRow({ data }: { data: ImageInfo }) {
     const [download, setDownload] = useState(false);
@@ -16,31 +17,36 @@ function DashboardRow({ data }: { data: ImageInfo }) {
 
     const imageDownload = async () => {
         setDownload(true);
-        if (!Array.isArray(images)) return;
-        const imagePromises = images.map(async (imagePath) => {
-            const fetchData = await fetch(`https://waterfacilitybucket.s3.ap-northeast-2.amazonaws.com/${imagePath}`);
-            const blob = await fetchData.blob();
-            return blob;
+
+        const imageParent: HTMLDivElement = document.getElementById(data[0]) as HTMLDivElement;
+        const images = imageParent.querySelectorAll("img");
+        const canvas = document.createElement("canvas");
+        const a = document.createElement("a");
+        const ctx = canvas.getContext("2d");
+
+        const base64Images = [...images].map((imgElem) => {
+            canvas.width = imgElem.naturalWidth;
+            canvas.height = imgElem.naturalHeight;
+            ctx?.drawImage(imgElem, 0, 0);
+            return canvas.toDataURL("image/jpeg");
         });
-        const imagesBlobs = await Promise.all(imagePromises);
+
         if (confirm("압축파일로 다운받으시겠습니까?")) {
             // 압축파일로
             const zip = new JSZip();
-            imagesBlobs.forEach((imageBlob, index) => {
-                zip.file(`${YEAR}년 ${MONTH}월 ${DATE}일-${index}.jpg`, imageBlob);
+            base64Images.forEach((base64: string, index: number) => {
+                const e = base64.split(",")[1];
+                zip.file(`${YEAR}년 ${MONTH}월 ${DATE}일-${index}.jpg`, e, { base64: true });
             });
 
             const zipFile = await zip.generateAsync({ type: "blob" });
             saveAs(zipFile, `${YEAR}년 ${MONTH}월 ${DATE}일 사진.zip`);
         } else {
             // 그냥 생으로
-            const objectUrls = imagesBlobs.map((blob) => URL.createObjectURL(blob));
-            const downloadA = document.createElement("a");
-
-            objectUrls.forEach((objectUrl, index) => {
-                downloadA.href = objectUrl;
-                downloadA.download = String(index + 1);
-                downloadA.click();
+            base64Images.forEach((base64: string, index: number) => {
+                a.href = base64;
+                a.download = `${index + 1}`;
+                a.click();
             });
         }
 
@@ -59,7 +65,7 @@ function DashboardRow({ data }: { data: ImageInfo }) {
                     {download ? "다운로드중.." : "전체 다운로드"}
                 </div>
             </div>
-            <div className="grid grid-cols-3 gap-[12px] mt-[12px]">
+            <div className={`grid grid-cols-3 gap-[12px] mt-[12px]`} id={data[0]}>
                 {Array.isArray(images) && images.map((image: string) => <ImageItem key={image} imagePath={image} />)}
             </div>
         </div>
