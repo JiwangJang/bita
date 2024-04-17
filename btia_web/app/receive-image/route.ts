@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: true }, { status: 200 });
     } catch (e) {
         console.log(e);
-        return NextResponse.json({ success: false }, { status: 500 });
+        return NextResponse.json({ success: false, e });
     }
 }
 // 크론탭 이용해서 주기적으로 쿼리
