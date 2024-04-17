@@ -1,4 +1,4 @@
-package com.example.btia_app
+package jiwang.btia_app
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:btia_app/view/custom_appbar.dart';
 import 'package:btia_app/view/photosWidget/confirm_modal.dart';
 import 'package:btia_app/view/photosWidget/custom_toast.dart';
@@ -46,6 +48,11 @@ class _PhotosState extends State<Photos> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: const Color.fromRGBO(49, 51, 48, 1),
@@ -83,8 +90,11 @@ class _PhotosState extends State<Photos> {
                 bottom: toast ? 20 : -100,
                 duration: const Duration(milliseconds: 500),
                 onEnd: () {
-                  Future.delayed(const Duration(seconds: 3))
-                      .then((value) => toastOff());
+                  Timer(const Duration(seconds: 3), () {
+                    if (context.mounted) {
+                      toastOff();
+                    }
+                  });
                 },
                 curve: Curves.easeInOut,
                 child: CustomToast(
