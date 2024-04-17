@@ -68,9 +68,7 @@ class CustomtakePictureBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
-        print('did');
-      },
+      onPopInvoked: (didPop) {},
       child: Consumer<PhotosModel>(builder: (_, photoData, child) {
         return GestureDetector(
           onTap: () async => await pictureFunc(),

@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:btia_app/util/get_random_id.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
+// ignore: implementation_imports
 import 'package:http_parser/src/media_type.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -120,7 +120,7 @@ class PhotosModel extends ChangeNotifier {
       DateTime now = DateTime.now();
       String createdAt = DateFormat('yyyy-MM-dd').format(now);
       Uri url = Uri.parse(
-          'http://172.20.10.2:3000/receive-image?userCode=$code&createdAt=$createdAt');
+          'https://btia.app/receive-image?userCode=$code&createdAt=$createdAt');
       var request = http.MultipartRequest("POST", url);
       MediaType contentType = MediaType('image', 'jpeg');
       for (var imageInfo in photos) {

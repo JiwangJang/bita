@@ -6,6 +6,7 @@ import 'package:btia_app/view/code.dart';
 import 'package:btia_app/view/photos.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -41,6 +42,12 @@ Future<void> main() async {
     code = idGenerator();
     file.writeAsStringSync(code);
   }
+
+  // 세로모드고정
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   final List<CameraDescription> cameras = await availableCameras();
   runApp(ChangeNotifierProvider(

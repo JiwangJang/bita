@@ -198,3 +198,47 @@ input {
     background-repeat: no-repeat;
     background-size: 36px 36px;
 }
+
+.qm {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    max-width: 130px;
+    max-height: 200px;
+    width: 20vw;
+    height: 30vw;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s;
+}
+
+.qm.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.qm-1 {
+    background-image: url("/image/manual/qm-1.png");
+    top: 15%;
+    left: 15%;
+}
+.qm-2 {
+    background-image: url("/image/manual/qm-2.png");
+    top: 5%;
+    left: 45%;
+}
+.qm-3 {
+    background-image: url("/image/manual/qm-3.png");
+    top: 15%;
+    right: 15%;
+}
+.qm-4 {
+    background-image: url("/image/manual/qm-4.png");
+    top: 70%;
+    left: 25%;
+}
+.qm-5 {
+    background-image: url("/image/manual/qm-5.png");
+    top: 70%;
+    right: 25%;
+}

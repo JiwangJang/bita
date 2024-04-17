@@ -30,7 +30,7 @@ class CameraUI extends StatelessWidget {
                             onPressed: () {
                               context.pop();
                             },
-                            child: Text('그래도 나갈래요'))
+                            child: const Text('그래도 나갈래요'))
                       ],
                     );
                   });
@@ -52,7 +52,7 @@ class CameraUI extends StatelessWidget {
             ),
           ),
         ),
-        CameraBottomBar(),
+        const CameraBottomBar(),
       ],
     );
   }

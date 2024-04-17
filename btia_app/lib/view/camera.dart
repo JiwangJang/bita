@@ -51,7 +51,9 @@ class _CameraState extends State<Camera> {
               return const CameraUI();
             } else {
               return const Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                ),
               );
             }
           } catch (e) {
