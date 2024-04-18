@@ -7,7 +7,10 @@ export default function Home() {
     if (userCode) redirect(`/image-view`);
 
     return (
-        <div className="h-[calc(100vh-100px)] max-w-[1200px] m-auto relative flex justify-center pt-[15vh]">
+        <div
+            className="max-h-[calc(100vh-100px)] max-w-[1200px] m-auto relative flex justify-center md:py-[15vh] py-[10vh] 
+            xl:px-[0px] px-[20px]"
+        >
             <Landing />
         </div>
     );

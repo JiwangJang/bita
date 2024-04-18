@@ -45,15 +45,16 @@ function SelectDownload({ count }: { count: number }) {
 
     return (
         <div
-            className={`fixed w-full bg-[#FFFFFF] left-0 z-[11] ${count > 0 ? "bottom-[0%]" : "bottom-[-40%]"}`}
+            className={`fixed w-full xl:p-0 px-[20px] bg-[#FFFFFF] left-0 z-[11] 
+            ${count > 0 ? "bottom-[0%]" : "bottom-[-40%]"}`}
             style={{
                 transition: "all 0.8s ease-in-out",
             }}
         >
-            <div className="max-w-[1200px] w-full m-auto flex py-[24px] font-[700] items-center justify-between">
-                <p className="text-[40px]">선택하신 사진 : {count}장</p>
+            <div className="max-w-[1200px] w-full m-auto flex xl:py-[24px] py-[2vw] font-[700] items-center justify-between">
+                <p className="xl:text-[40px] md:text-[3vw] text-[24px]">선택하신 사진 : {count}장</p>
                 <div
-                    className="px-[28px] py-[16px] bg-[#00A3FF] text-white rounded-full text-[24px] fill-btn"
+                    className="sm:px-[28px] sm:py-[16px] px-[20px] py-[10px] text-white rounded-full sm:text-[24px] text-[18px] fill-btn"
                     onClick={imageDownload}
                     style={{
                         opacity: download ? "0.4" : "1",

@@ -16,6 +16,7 @@ function CodeForm({ availableClose = true, setUserCode }: Props) {
     const modalRef = useRef<HTMLDivElement>(null);
     const formerCodeRef = useRef<string>("");
     const latterCodeRef = useRef<string>("");
+    const firstInputRef = useRef<HTMLInputElement>(null);
     const secondInputRef = useRef<HTMLInputElement>(null);
 
     const modalOff = (e: MouseEvent) => {
@@ -71,18 +72,18 @@ function CodeForm({ availableClose = true, setUserCode }: Props) {
     };
     return (
         <div
-            className={`fixed bg-[#00000000] flex invisible top-0 left-0 w-[100vw] h-[100vh] justify-center items-center transition-all ${
-                availableClose ? "cursor-pointer" : "active"
-            } modal-back`}
+            className={`fixed bg-[#00000000] flex invisible top-0 left-0 w-[100vw] h-[100vh] 
+            sm:p-0 px-[12px]
+            justify-center items-center transition-all ${availableClose ? "cursor-pointer" : "active"} modal-back`}
             onClick={modalOff}
             ref={modalRef}
         >
             <div className="p-[36px] flex-col bg-[#FFFFFF] rounded-[10px] cursor-default opacity-0 translate-y-[20px] modal">
-                <p className="font-[900] text-[64px] mb-[6px]">코드를 입력해주세요</p>
-                <p className="text-[32px] font-[700] mb-[4px]">나의코드</p>
+                <p className="font-[900] md:text-[64px] text-[44px] md:mb-[6px]">코드를 입력해주세요</p>
+                <p className="font-[700] md:text-[32px] text-[22px] mb-[4px]">나의코드</p>
                 <div className="flex gap-[4px] items-center mb-[8px]">
-                    <input type="text" onInput={firstInputEvent} />
-                    <div className="w-[24px] h-[2px] bg-black"></div>
+                    <input type="text" onInput={firstInputEvent} ref={firstInputRef} />
+                    <div className="sm:w-[24px] w-[12px] h-[2px] bg-black"></div>
                     <input
                         type="text"
                         ref={secondInputRef}
@@ -93,9 +94,8 @@ function CodeForm({ availableClose = true, setUserCode }: Props) {
                     />
                 </div>
                 <div
-                    className={`py-[16px] flex justify-center bg-primary rounded-[10px] text-[#FFFFFF] font-[700] text-[32px] cursor-pointer mb-[4px] fill-btn ${
-                        loading ? "working" : ""
-                    }`}
+                    className={`md:py-[16px] py-[12px] flex justify-center bg-primary rounded-[10px] text-[#FFFFFF] 
+                    font-[700] md:text-[32px] text-[24px] cursor-pointer mb-[4px] fill-btn ${loading ? "working" : ""}`}
                     onClick={verifyCode}
                 >
                     {loading ? "검증중.." : "입력"}

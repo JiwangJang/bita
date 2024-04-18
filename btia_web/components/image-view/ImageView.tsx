@@ -57,7 +57,7 @@ export default function ImageView({ cookieUserCode }: { cookieUserCode: string }
     };
 
     return (
-        <div className="max-w-[1200px] m-auto min-h-[calc(100vh-100px)] py-[36px] flex flex-col">
+        <div className="max-w-[1200px] xl:px-0 px-[20px] m-auto min-h-[calc(100vh-100px)] py-[36px] flex flex-col">
             {err ? (
                 <div className=" flex-1 flex flex-col items-center justify-center">
                     <p className="font-[900] text-[44px] mb-[4px]">서버에서 에러발생</p>
@@ -79,11 +79,13 @@ export default function ImageView({ cookieUserCode }: { cookieUserCode: string }
                 </div>
             ) : (
                 <>
-                    <p className="text-[80px] font-[900] mb-[8px]">지금까지 업로드한 사진들</p>
-                    <div className="flex gap-[12px] items-center">
-                        <p className="text-[32px]">보관기간은 업로드시점부터 일주일입니다</p>
+                    <p className="xl:text-[80px] text-[6.5vw] font-[900] sm:mb-[8px] mb-[2px]">
+                        지금까지 업로드한 사진들
+                    </p>
+                    <div className="flex xl:gap-[12px] gap-[1vw] items-center">
+                        <p className="xl:text-[32px] sm:text-[2.5vw]">보관기간은 업로드시점부터 일주일입니다</p>
                         <div
-                            className="text-[18px] px-[12px] py-[4px] rounded-full ghost-btn"
+                            className="sm:text-[18px] text-[14px] md:px-[12px] md:py-[4px] px-[8px] py-[2px] rounded-full ghost-btn"
                             onClick={() => {
                                 setInfoData(null);
                                 setCodeFormOn(true);
@@ -92,7 +94,7 @@ export default function ImageView({ cookieUserCode }: { cookieUserCode: string }
                             유저코드 변경
                         </div>
                     </div>
-                    <div className="mt-[28px]">
+                    <div className="xl:mt-[28px] mt-[2vw]">
                         {infoData ? (
                             <ImageDashboard infoData={infoData} checkCounter={checkCounter} />
                         ) : (

@@ -53,19 +53,19 @@ function DashboardRow({ data }: { data: ImageInfo }) {
         setDownload(false);
     };
     return (
-        <div className="mt-[40px]">
+        <div className="xl:mt-[40px] mt-[3vw]">
             <div className="font-[700] flex gap-[12px] items-center">
-                <p className="text-[48px]">{`${YEAR}년 ${MONTH}월 ${DATE}일`}</p>
+                <p className="xl:text-[48px] sm:text-[3.5vw] text-[24px]">{`${YEAR}년 ${MONTH}월 ${DATE}일`}</p>
                 <div
-                    className={`text-[20px] py-[8px] px-[16px] rounded-full  cursor-pointer relative ghost-btn ${
-                        download ? "working" : ""
-                    }`}
+                    className={`xl:text-[20px]  md:px-[12px] md:py-[4px] px-[8px] py-[2px] font-[500]
+                    sm:text-[18px] text-[14px] rounded-full cursor-pointer relative ghost-btn 
+                    ${download ? "working" : ""}`}
                     onClick={imageDownload}
                 >
                     {download ? "다운로드중.." : "전체 다운로드"}
                 </div>
             </div>
-            <div className={`grid grid-cols-3 gap-[12px] mt-[12px]`} id={data[0]}>
+            <div className={`grid grid-cols-3 sm:gap-[12px] gap-[6px] mt-[12px]`} id={data[0]}>
                 {Array.isArray(images) && images.map((image: string) => <ImageItem key={image} imagePath={image} />)}
             </div>
         </div>
