@@ -1,5 +1,6 @@
 import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { sql } from "@vercel/postgres";
+import { NextResponse } from "next/server";
 
 export async function GET() {
     try {
@@ -18,7 +19,9 @@ export async function GET() {
         await Promise.all(deletePromise);
         await sql`DELETE FROM btia WHERE date(created_at) <= date(NOW()) - 2;`;
         console.log(`${deletePromise.length} deleted.`);
+        return NextResponse.json({ success: true });
     } catch (error) {
         console.error(error);
+        return NextResponse.json({ success: false });
     }
 }
