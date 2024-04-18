@@ -1,6 +1,5 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { QueryResult, sql } from "@vercel/postgres";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -40,5 +39,3 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: false }, { status: 500 });
     }
 }
-// 크론탭 이용해서 주기적으로 쿼리
-// DELETE FROM `table` WHERE `wdate` < DATE_SUB(NOW(), INTERVAL 7 DAY)
