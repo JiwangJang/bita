@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:http_parser/src/media_type.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class PhotosModel extends ChangeNotifier {
@@ -151,6 +152,25 @@ class PhotosModel extends ChangeNotifier {
         return {"success": false, "msg": "network"};
       }
       return {"success": false, "msg": "appErr"};
+    }
+  }
+
+  Future<Map<String, dynamic>> selcetImages() async {
+    try {
+      ImagePicker imagePicker = ImagePicker();
+      List<XFile> images = await imagePicker.pickMultiImage();
+      if (photos.length + images.length >= 10) {
+        return {"success": false, "msg": "exceed"};
+      }
+      for (var image in images) {
+        Uint8List imageBytes = File(image.path).readAsBytesSync();
+        String imageId = getRandomId();
+        addImage(imageId, imageBytes);
+      }
+      return {"success": true};
+    } catch (e) {
+      print(e);
+      return {"success": false, "msg": "innerErr"};
     }
   }
 }

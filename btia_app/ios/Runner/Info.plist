@@ -46,7 +46,9 @@
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
 		<key>NSCameraUsageDescription</key>
-		<string>앱사용을 위해 필수입니다</string>
+		<string>앱 사용을 위해 필수입니다</string>
+		<key>NSPhotoLibraryUsageDescription </key>
+		<string>기존에 찍어둔 사진들을 서버로 보내기위해 필요합니다</string>
 		<key>LSApplicationQueriesSchemes</key>
 		<array>
 			<string>https</string>

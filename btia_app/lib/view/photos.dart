@@ -62,10 +62,13 @@ class _PhotosState extends State<Photos> {
         ),
         body: Stack(
           children: [
+            // 사진 목록(갤러리추가버튼도 있음)
             Positioned.fill(
                 child: PhotoListView(
               modalOnFunc: modalOn,
+              toastOn: toastOn,
             )),
+            // 업로드버튼
             Positioned(
               bottom: 0,
               left: 0,
@@ -74,9 +77,11 @@ class _PhotosState extends State<Photos> {
                 toastOnFunc: toastOn,
               ),
             ),
+            // 업로딩 원
             const Positioned.fill(
               child: UploadingIndicator(),
             ),
+            // 삭제할 때 모달
             Positioned.fill(
               child: modal
                   ? ConfirmModal(
@@ -84,6 +89,7 @@ class _PhotosState extends State<Photos> {
                     )
                   : const SizedBox(),
             ),
+            // 커스텀 토스트
             AnimatedPositioned(
                 left: 0,
                 right: 0,

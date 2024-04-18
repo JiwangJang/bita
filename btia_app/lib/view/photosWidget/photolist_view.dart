@@ -1,12 +1,15 @@
 import 'package:btia_app/model/photos_model.dart';
 import 'package:btia_app/view/photosWidget/photo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class PhotoListView extends StatelessWidget {
-  const PhotoListView({required this.modalOnFunc, super.key});
+  const PhotoListView(
+      {required this.modalOnFunc, required this.toastOn, super.key});
 
   final Function modalOnFunc;
+  final Function toastOn;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +36,34 @@ class PhotoListView extends StatelessWidget {
                 color: Colors.white,
                 fontSize: 20,
                 letterSpacing: -0.05,
+              ),
+            ),
+            GestureDetector(
+              onTap: () async {
+                Map<String, dynamic> result = await photoData.selcetImages();
+                print(result);
+                if (result['success']) {
+                  toastOn("성공", '사진을 불러오는데 성공했습니다');
+                } else {
+                  if (result['msg'] == 'exceed') {
+                    toastOn('사진 갯수 초과', '10장을 초과할 수 없습니다');
+                  } else {
+                    toastOn('의문의 에러', "계속되면 개발자에게 문의해주세요");
+                  }
+                }
+              },
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                    color: const Color.fromRGBO(83, 83, 83, 1),
+                    borderRadius: BorderRadius.circular(10)),
+                child: const Text(
+                  '갤러리에서 추가하기',
+                  style: TextStyle(color: Colors.white, fontSize: 24),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
             Expanded(

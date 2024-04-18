@@ -5,6 +5,7 @@ import ImageSkeleton from "./ImageSkeleton";
 import ImageDashboard from "./ImageDashboard";
 import SelectDownload from "./SelectDownload";
 import CodeForm from "../landing/codeForm";
+import { useSearchParams } from "next/navigation";
 
 export type ImageInfo = string[] | string;
 
@@ -26,7 +27,7 @@ export default function ImageView({ cookieUserCode }: { cookieUserCode: string }
     const [infoData, setInfoData] = useState<ImageInfo[] | null>(null);
     const [checkCount, setCheckCount] = useState<number>(0);
     const [codeFormOn, setCodeFormOn] = useState<boolean>(false);
-    const [userCode, setUserCode] = useState("");
+    const [userCode, setUserCode] = useState(useSearchParams().get("userCode") ?? "");
     const [err, setErr] = useState<string>("");
 
     useEffect(() => {
@@ -36,7 +37,7 @@ export default function ImageView({ cookieUserCode }: { cookieUserCode: string }
             return;
         } else {
             setCodeFormOn(false);
-            getImageInfo(userCode === "" ? cookieUserCode : userCode).then((result) => {
+            getImageInfo(userCode ? userCode : cookieUserCode).then((result) => {
                 if (result.success) {
                     setInfoData(result.result);
                 } else {

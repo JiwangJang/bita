@@ -58,8 +58,8 @@ class Code extends StatelessWidget {
             CustomButton(
               btnTitle: '웹사이트 방문',
               bgColor: const Color.fromRGBO(255, 107, 0, 1),
-              onTapFunc: () =>
-                  launchUrl(Uri.parse('https://www.google.co.kr/?hl=ko')),
+              onTapFunc: () => launchUrl(
+                  Uri.parse('https://btia.app/receive-image?userCode=$code')),
             ),
           ],
         ),
