@@ -48,6 +48,8 @@ class UploadBtn extends StatelessWidget {
                     case 'serverErr':
                       subMsg = '잠시후 다시 시도해보세요';
                       break;
+                    case 'tooLarge':
+                      subMsg = '보내시려는 사진이 너무 많습니다';
                     default:
                       subMsg = '잠시후 다시 시도해보세요';
                       break;

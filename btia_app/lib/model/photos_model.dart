@@ -134,12 +134,13 @@ class PhotosModel extends ChangeNotifier {
         request.files.add(image);
       }
       var response = await request.send();
-
       isUploading = false;
       notifyListeners();
       if (response.statusCode == 200) {
         photos.clear();
         return {"success": true};
+      } else if (response.statusCode == 413) {
+        return {"success": false, "msg": "tooLarge"};
       } else if (response.statusCode == 500) {
         return {"success": false, "msg": "serverErr"};
       } else {
@@ -158,8 +159,8 @@ class PhotosModel extends ChangeNotifier {
   Future<Map<String, dynamic>> selcetImages() async {
     try {
       ImagePicker imagePicker = ImagePicker();
-      List<XFile> images = await imagePicker.pickMultiImage();
-      if (photos.length + images.length >= 10) {
+      List<XFile> images = await imagePicker.pickMultiImage(imageQuality: 50);
+      if (photos.length + images.length > 5) {
         return {"success": false, "msg": "exceed"};
       }
       for (var image in images) {
@@ -169,7 +170,6 @@ class PhotosModel extends ChangeNotifier {
       }
       return {"success": true};
     } catch (e) {
-      print(e);
       return {"success": false, "msg": "innerErr"};
     }
   }

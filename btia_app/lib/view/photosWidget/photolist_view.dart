@@ -1,7 +1,6 @@
 import 'package:btia_app/model/photos_model.dart';
 import 'package:btia_app/view/photosWidget/photo.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class PhotoListView extends StatelessWidget {
@@ -23,7 +22,7 @@ class PhotoListView extends StatelessWidget {
               height: 8,
             ),
             const Text(
-              '사진업로드는 한번에 최대 10장까지 가능합니다',
+              '사진업로드는 한번에 최대 5장까지 가능합니다',
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -31,7 +30,7 @@ class PhotoListView extends StatelessWidget {
                   fontWeight: FontWeight.w800),
             ),
             Text(
-              '현재 : ${photoData.photos.length}/10',
+              '현재 : ${photoData.photos.length}/5',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -41,12 +40,11 @@ class PhotoListView extends StatelessWidget {
             GestureDetector(
               onTap: () async {
                 Map<String, dynamic> result = await photoData.selcetImages();
-                print(result);
                 if (result['success']) {
                   toastOn("성공", '사진을 불러오는데 성공했습니다');
                 } else {
                   if (result['msg'] == 'exceed') {
-                    toastOn('사진 갯수 초과', '10장을 초과할 수 없습니다');
+                    toastOn('사진 갯수 초과', '5장을 초과할 수 없습니다');
                   } else {
                     toastOn('의문의 에러', "계속되면 개발자에게 문의해주세요");
                   }

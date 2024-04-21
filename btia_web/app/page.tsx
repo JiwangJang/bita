@@ -2,9 +2,17 @@ import Landing from "@/components/landing/Landing";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export default function Home() {
+export default function Home({
+    searchParams,
+}: {
+    searchParams?: {
+        [key: string]: string | string[] | undefined;
+    };
+}) {
     const userCode = cookies().get("btia_user_code")?.value;
+    const queryUserCode = searchParams?.userCode;
     if (userCode) redirect(`/image-view`);
+    if (queryUserCode) redirect(`/image-view?userCode=${queryUserCode}`);
 
     return (
         <div
