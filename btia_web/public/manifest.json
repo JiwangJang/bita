@@ -1,0 +1,22 @@
+{
+    "name": "출장사진 저장소",
+    "icons": [
+      {
+        "src": "/images/manual/app-icon-192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/images/manual/app-icon.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ], 
+    "display": "standalone",
+    "start_url": "/", 
+    "description": "출장사진을 원격서버에 저장해주는 서비스입니다.", 
+    "background_color": "white", 
+    "theme_color": "#FF6B00", 
+    "orientation": "portrait",
+    "scope": "/"
+  }

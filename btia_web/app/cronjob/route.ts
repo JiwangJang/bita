@@ -11,13 +11,13 @@ export async function GET() {
             },
             region: process.env.S3_REGION,
         });
-        const expired = await sql`SELECT * FROM btia WHERE date(created_at) <= date(NOW()) - 2;`;
+        const expired = await sql`SELECT * FROM btia WHERE date(created_at) <= date(NOW()) - 7;`;
         const deletePromise = expired.rows.map(({ image_path }) => {
             return s3Client.send(new DeleteObjectCommand({ Bucket: process.env.S3_BUCKET, Key: image_path }));
         });
 
         await Promise.all(deletePromise);
-        await sql`DELETE FROM btia WHERE date(created_at) <= date(NOW()) - 2;`;
+        await sql`DELETE FROM btia WHERE date(created_at) <= date(NOW()) - 7;`;
         console.log(`${deletePromise.length} deleted.`);
         return NextResponse.json({ success: true });
     } catch (error) {

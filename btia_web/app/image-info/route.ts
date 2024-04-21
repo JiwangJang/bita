@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
         const arrangedData = Object.entries(fileterdData).sort().reverse();
         return NextResponse.json({ success: true, result: arrangedData });
     } catch (error) {
+        console.log(error);
         return NextResponse.json({ success: false, err: "server" });
     }
 }

@@ -14,8 +14,12 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang='en'>
-            <body className='bg-white'>
+        <html lang="en">
+            <head>
+                <link rel="icon" href="/image/manual/app-icon.png" />
+                <link rel="apple-touch-icon" href="/image/manual/app-icon.png" />
+            </head>
+            <body className="bg-white">
                 <Header />
                 {children}
                 <Footer />

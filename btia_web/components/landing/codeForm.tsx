@@ -2,8 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { FormEvent, useRef, useState, MouseEvent, SetStateAction, Dispatch } from "react";
-import { ImageInfo } from "../image-view/ImageView";
-import { cookies } from "next/headers";
 
 interface Props {
     availableClose?: boolean;
@@ -59,7 +57,7 @@ function CodeForm({ availableClose = true, setUserCode }: Props) {
         const USERCODE = `${former}-${latter}`;
         setLoading(true);
 
-        const MONTH_SECOND = 3600 * 30;
+        const MONTH_SECOND = 3600 * 24 * 30;
 
         document.cookie = `btia_user_code = ${USERCODE}; max-age=${MONTH_SECOND}`;
         if (availableClose) {

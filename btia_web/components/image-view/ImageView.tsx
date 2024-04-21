@@ -36,6 +36,11 @@ export default function ImageView({ cookieUserCode }: { cookieUserCode: string }
             setCodeFormOn(true);
             return;
         } else {
+            if (cookieUserCode) {
+                const MONTH_SECOND = 3600 * 24 * 30;
+                document.cookie = `btia_user_code = ${cookieUserCode}; max-age=${MONTH_SECOND}`;
+            }
+
             setCodeFormOn(false);
             getImageInfo(userCode ? userCode : cookieUserCode).then((result) => {
                 if (result.success) {
