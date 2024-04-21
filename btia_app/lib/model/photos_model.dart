@@ -23,6 +23,7 @@ class PhotosModel extends ChangeNotifier {
   bool isTakingPicture = false;
   bool pictureModal = false;
   late String deleteTarget;
+  int curUploadedImage = 0;
 
   void setController(CameraController newController) {
     controller = newController;
@@ -133,6 +134,7 @@ class PhotosModel extends ChangeNotifier {
         );
         request.files.add(image);
       }
+      print(request.contentLength);
       var response = await request.send();
       isUploading = false;
       notifyListeners();
