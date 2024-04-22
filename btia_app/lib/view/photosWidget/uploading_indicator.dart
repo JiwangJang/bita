@@ -9,18 +9,21 @@ class UploadingIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<PhotosModel>(
       builder: (context, data, child) {
-        if (data.isUploading) {
-          return Container(
+        return Visibility(
+          visible: data.isUploading,
+          child: Container(
             color: const Color.fromRGBO(0, 0, 0, 0.5),
-            child: const Center(
-              child: CircularProgressIndicator(
-                color: Colors.white,
-                strokeWidth: 5,
+            child: Center(
+              child: Text(
+                data.curUploadedImage.toString(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
               ),
             ),
-          );
-        }
-        return const SizedBox();
+          ),
+        );
       },
     );
   }

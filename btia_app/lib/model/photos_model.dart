@@ -33,7 +33,7 @@ class PhotosModel extends ChangeNotifier {
 
   Future<void> takePicture() async {
     if (isTakingPicture) return;
-    if (photos.length >= 10) {
+    if (photos.length >= 100) {
       pictureModal = true;
       notifyListeners();
       Future.delayed(const Duration(seconds: 1)).then((value) {
@@ -117,40 +117,69 @@ class PhotosModel extends ChangeNotifier {
     if (photos.isEmpty) return {"success": false, "msg": "empty"};
 
     isUploading = true;
+    List<String> uploadedKeys = [];
     notifyListeners();
     try {
       DateTime now = DateTime.now();
       String createdAt = DateFormat('yyyy-MM-dd').format(now);
       Uri url = Uri.parse(
           'https://btia.app/receive-image?userCode=$code&createdAt=$createdAt');
-      var request = http.MultipartRequest("POST", url);
       MediaType contentType = MediaType('image', 'jpeg');
+      curUploadedImage = 0;
+      // 이 위까진 공통적으로 필요
+
+      var request = http.MultipartRequest("POST", url);
+      // int MAX_BODY_SIZE = 4300000;
+      int MAX_BODY_SIZE = 300000;
+
       for (var imageInfo in photos) {
+        int remain = MAX_BODY_SIZE - request.contentLength;
         var image = http.MultipartFile.fromBytes(
           'images',
           imageInfo['image'],
           contentType: contentType,
           filename: imageInfo['id'],
         );
+
+        if (remain < image.length) {
+          await Future.delayed(const Duration(seconds: 1)).then((value) {
+            print('현재 파일길이 : ${request.files.length}');
+            request.files.clear();
+          });
+        }
+        print('업로드 파일길이 : ${request.files.length}');
         request.files.add(image);
+        uploadedKeys.add(imageInfo['id']);
+        curUploadedImage = uploadedKeys.length;
+        notifyListeners();
       }
-      print(request.contentLength);
-      var response = await request.send();
+
+      await Future.delayed(const Duration(seconds: 1)).then((value) {
+        print('현재 파일길이 : ${request.files.length}');
+        curUploadedImage = request.files.length;
+        notifyListeners();
+        request.files.clear();
+      });
+      // var response = await request.send();
       isUploading = false;
       notifyListeners();
-      if (response.statusCode == 200) {
-        photos.clear();
-        return {"success": true};
-      } else if (response.statusCode == 413) {
-        return {"success": false, "msg": "tooLarge"};
-      } else if (response.statusCode == 500) {
-        return {"success": false, "msg": "serverErr"};
-      } else {
-        return {"success": false, "msg": "appErr"};
-      }
+      // if (response.statusCode == 200) {
+      //   photos.clear();
+      //   return {"success": true};
+      // } else if (response.statusCode == 413) {
+      //   return {"success": false, "msg": "tooLarge"};
+      // } else if (response.statusCode == 500) {
+      //   return {"success": false, "msg": "serverErr"};
+      // } else {
+      //   return {"success": false, "msg": "appErr"};
+      // }
+      photos.clear();
+      return {"success": true};
     } catch (e) {
       isUploading = false;
+      photos.removeWhere((element) => uploadedKeys.contains(element['id']));
       notifyListeners();
+      print("err $e");
       if (e is SocketException) {
         return {"success": false, "msg": "network"};
       }
