@@ -28,6 +28,7 @@ class CustomToast extends StatelessWidget {
           ),
           Text(
             subMessage,
+            textAlign: TextAlign.center,
             style: const TextStyle(
                 color: Colors.white,
                 fontSize: 20,

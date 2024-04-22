@@ -33,7 +33,7 @@ class PhotosModel extends ChangeNotifier {
 
   Future<void> takePicture() async {
     if (isTakingPicture) return;
-    if (photos.length >= 100) {
+    if (photos.length >= 10) {
       pictureModal = true;
       notifyListeners();
       Future.delayed(const Duration(seconds: 1)).then((value) {
@@ -125,13 +125,11 @@ class PhotosModel extends ChangeNotifier {
       Uri url = Uri.parse(
           'https://btia.app/receive-image?userCode=$code&createdAt=$createdAt');
       MediaType contentType = MediaType('image', 'jpeg');
-      curUploadedImage = 0;
       // 이 위까진 공통적으로 필요
 
       var request = http.MultipartRequest("POST", url);
-      // int MAX_BODY_SIZE = 4300000;
-      int MAX_BODY_SIZE = 300000;
-
+      int MAX_BODY_SIZE = 4300000;
+      final List<Map<String, dynamic>> exceedImages = [];
       for (var imageInfo in photos) {
         int remain = MAX_BODY_SIZE - request.contentLength;
         var image = http.MultipartFile.fromBytes(
@@ -140,48 +138,63 @@ class PhotosModel extends ChangeNotifier {
           contentType: contentType,
           filename: imageInfo['id'],
         );
-
-        if (remain < image.length) {
-          await Future.delayed(const Duration(seconds: 1)).then((value) {
-            print('현재 파일길이 : ${request.files.length}');
-            request.files.clear();
-          });
+        // 현재 이미지가 4.3MB가 넘을경우
+        if (MAX_BODY_SIZE < image.length) {
+          exceedImages.add(imageInfo);
+          continue;
         }
-        print('업로드 파일길이 : ${request.files.length}');
+
+        // 현재 더이상 이미지를 욱여넣을수 없을경우
+        if (remain < image.length) {
+          var response = await request.send();
+          print(
+              "파일 크기 : ${request.contentLength}, 파일 수 : ${request.files.length}");
+          request.files.clear();
+          curUploadedImage = uploadedKeys.length;
+          if (response.statusCode == 500) {
+            throw const FormatException('severErr');
+          } else {
+            throw const FormatException('appErr');
+          }
+        }
         request.files.add(image);
         uploadedKeys.add(imageInfo['id']);
-        curUploadedImage = uploadedKeys.length;
         notifyListeners();
+        print("curUploadedImage : $curUploadedImage, ${photos.length}");
       }
-
-      await Future.delayed(const Duration(seconds: 1)).then((value) {
-        print('현재 파일길이 : ${request.files.length}');
-        curUploadedImage = request.files.length;
-        notifyListeners();
-        request.files.clear();
-      });
-      // var response = await request.send();
+      // 마지막 한 개 남았을때 처리
+      var response = await request.send();
+      if (response.statusCode == 500) {
+        throw const FormatException('severErr');
+      }
       isUploading = false;
+      curUploadedImage = 0;
       notifyListeners();
-      // if (response.statusCode == 200) {
-      //   photos.clear();
-      //   return {"success": true};
-      // } else if (response.statusCode == 413) {
-      //   return {"success": false, "msg": "tooLarge"};
-      // } else if (response.statusCode == 500) {
-      //   return {"success": false, "msg": "serverErr"};
-      // } else {
-      //   return {"success": false, "msg": "appErr"};
-      // }
       photos.clear();
+      // 아까 못넣은 것들 넣어줌
+      if (exceedImages.isNotEmpty) {
+        photos.addAll(exceedImages);
+        throw const FormatException('tooLarge');
+      }
       return {"success": true};
     } catch (e) {
       isUploading = false;
       photos.removeWhere((element) => uploadedKeys.contains(element['id']));
       notifyListeners();
-      print("err $e");
       if (e is SocketException) {
         return {"success": false, "msg": "network"};
+      }
+
+      if (e is FormatException) {
+        print("err ${e.message}");
+        switch (e.message) {
+          case 'tooLarge':
+            return {"success": false, "msg": "tooLarge"};
+          case 'serverErr':
+            return {"success": false, "msg": "serverErr"};
+          default:
+            return {"success": false, "msg": "appErr"};
+        }
       }
       return {"success": false, "msg": "appErr"};
     }
@@ -191,7 +204,7 @@ class PhotosModel extends ChangeNotifier {
     try {
       ImagePicker imagePicker = ImagePicker();
       List<XFile> images = await imagePicker.pickMultiImage(imageQuality: 50);
-      if (photos.length + images.length > 5) {
+      if (photos.length + images.length > 10) {
         return {"success": false, "msg": "exceed"};
       }
       for (var image in images) {

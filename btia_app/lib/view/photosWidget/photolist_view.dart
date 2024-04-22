@@ -22,20 +22,31 @@ class PhotoListView extends StatelessWidget {
               height: 8,
             ),
             const Text(
-              '사진업로드는 한번에 최대 5장까지 가능합니다',
+              '개당 최대 4.3MB, 10장까지 가능합니다',
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,
                   letterSpacing: -0.05,
+                  height: 1.2,
                   fontWeight: FontWeight.w800),
             ),
-            Text(
-              '현재 : ${photoData.photos.length}/5',
-              style: const TextStyle(
+            const Text(
+              '어플로 촬영하신 사진은 어플종료시 복구할 수 없습니다',
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 20,
+                fontSize: 16,
+                height: 1.2,
                 letterSpacing: -0.05,
               ),
+            ),
+            Text(
+              '현재 : ${photoData.photos.length}/10',
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  letterSpacing: -0.05,
+                  height: 1.2,
+                  fontWeight: FontWeight.w700),
             ),
             GestureDetector(
               onTap: () async {
@@ -59,7 +70,11 @@ class PhotoListView extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10)),
                 child: const Text(
                   '갤러리에서 추가하기',
-                  style: TextStyle(color: Colors.white, fontSize: 24),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      height: 1,
+                      letterSpacing: -0.05),
                   textAlign: TextAlign.center,
                 ),
               ),

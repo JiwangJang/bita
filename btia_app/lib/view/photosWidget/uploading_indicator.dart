@@ -1,5 +1,6 @@
 import 'package:btia_app/model/photos_model.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 
 class UploadingIndicator extends StatelessWidget {
@@ -12,16 +13,23 @@ class UploadingIndicator extends StatelessWidget {
         return Visibility(
           visible: data.isUploading,
           child: Container(
-            color: const Color.fromRGBO(0, 0, 0, 0.5),
+            color: const Color.fromRGBO(0, 0, 0, 0.6),
             child: Center(
-              child: Text(
-                data.curUploadedImage.toString(),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
+                child: CircularPercentIndicator(
+              radius: 60,
+              lineWidth: 5,
+              percent: data.photos.isEmpty
+                  ? 1
+                  : data.curUploadedImage / data.photos.length,
+              center: const Text(
+                '업로드중',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700),
               ),
-            ),
+              progressColor: const Color.fromRGBO(255, 107, 0, 1),
+            )),
           ),
         );
       },
