@@ -25,7 +25,7 @@ class PhotosModel extends ChangeNotifier {
   bool pictureModal = false;
   late String deleteTarget;
   int curUploadedImage = 0;
-  int MAX_IMAGE_COUNT = 10;
+  int MAX_IMAGE_COUNT = 20;
 
   void setController(CameraController newController) {
     controller = newController;

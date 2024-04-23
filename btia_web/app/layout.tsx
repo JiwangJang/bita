@@ -6,6 +6,7 @@ import Footer from "@/components/layout/Footer";
 export const metadata: Metadata = {
     title: "출장사진저장소",
     description: "출장사진을 이젠 서버에 저장하세요!",
+    keywords: "출장사진, 사진저장",
 };
 
 export default function RootLayout({
