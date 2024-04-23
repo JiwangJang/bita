@@ -13,7 +13,7 @@ class ConfirmModal extends StatelessWidget {
       child: Center(
         child: Container(
           width: 268,
-          height: 166,
+          height: 175,
           decoration: BoxDecoration(
             border: Border.all(
               color: const Color.fromRGBO(79, 79, 79, 1),
@@ -35,7 +35,7 @@ class ConfirmModal extends StatelessWidget {
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w900,
-                          height: 1,
+                          height: 1.3,
                           fontSize: 28),
                     ),
                     Text(

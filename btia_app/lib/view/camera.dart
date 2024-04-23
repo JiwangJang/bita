@@ -36,7 +36,7 @@ class _CameraState extends State<Camera> {
     versionChecker().then((value) {
       bool update = value['update'] as bool;
       bool force = value['force'] as bool;
-
+      print("$update $force");
       if (update && force) {
         setState(() {
           modal = true;
@@ -112,26 +112,33 @@ class _CameraState extends State<Camera> {
 }
 
 Future<Map<String, bool>> versionChecker() async {
-  var url = Uri.parse('http://172.20.10.6:3000/get-app-version');
-  var res = await http.get(url);
-  String latestVersion = jsonDecode(res.body)['version'];
-  PackageInfo packageInfo = await PackageInfo.fromPlatform();
-  var [originMajor, originMinor, _] = packageInfo.version.split('.');
-  var [latestMajor, latestMinor, _] = latestVersion.split('.');
-  if (int.parse(originMajor) < int.parse(latestMajor)) {
+  try {
+    var url = Uri.parse('https://btia.app/get-app-version');
+    var res = await http.get(url);
+    String latestVersion = jsonDecode(res.body)['version'];
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    var [originMajor, originMinor, _] = packageInfo.version.split('.');
+    var [latestMajor, latestMinor, _] = latestVersion.split('.');
+    if (int.parse(originMajor) < int.parse(latestMajor)) {
+      return {
+        'update': true,
+        'force': true,
+      };
+    } else if (int.parse(originMinor) < int.parse(latestMinor)) {
+      return {
+        'update': true,
+        'force': false,
+      };
+    }
     return {
-      'update': true,
-      'force': true,
+      'update': false,
+      'force': false,
     };
-  } else if (int.parse(originMinor) < int.parse(latestMinor)) {
+  } catch (e) {
+    print(e);
     return {
-      'update': true,
+      'update': false,
       'force': false,
     };
   }
-
-  return {
-    'update': false,
-    'force': false,
-  };
 }
