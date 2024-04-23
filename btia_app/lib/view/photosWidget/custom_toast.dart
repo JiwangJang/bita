@@ -9,19 +9,20 @@ class CustomToast extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       alignment: Alignment.center,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(9999),
-          color: const Color.fromRGBO(255, 166, 102, 1)),
+        borderRadius: BorderRadius.circular(20),
+        color: const Color.fromRGBO(0, 0, 0, 0.7),
+      ),
       child: Column(
         children: [
           Text(
             mainMessage,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: FontWeight.w800,
               height: 1,
             ),
@@ -31,7 +32,7 @@ class CustomToast extends StatelessWidget {
             textAlign: TextAlign.center,
             style: const TextStyle(
                 color: Colors.white,
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.w500,
                 height: 1,
                 letterSpacing: -0.05),

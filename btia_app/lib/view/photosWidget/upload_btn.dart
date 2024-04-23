@@ -13,7 +13,7 @@ class UploadBtn extends StatelessWidget {
     return Consumer<PhotosModel>(
       builder: (context, data, child) {
         return Container(
-          height: 120,
+          height: 90,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.bottomCenter,
@@ -32,7 +32,7 @@ class UploadBtn extends StatelessWidget {
                 late String mainMsg;
                 late String subMsg;
                 if (result['success']) {
-                  mainMsg = '업로드에 성공했습니다';
+                  mainMsg = '업로드 성공';
                   subMsg = '사이트에서 확인해보세요!';
                 } else {
                   switch (result['msg']) {
@@ -54,7 +54,7 @@ class UploadBtn extends StatelessWidget {
                       subMsg = '잠시후 다시 시도해보세요';
                       break;
                   }
-                  mainMsg = '업로드에 실패했습니다';
+                  mainMsg = '업로드 실패';
                 }
                 toastOnFunc(mainMsg, subMsg);
               },

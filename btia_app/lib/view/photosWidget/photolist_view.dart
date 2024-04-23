@@ -12,7 +12,7 @@ class PhotoListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PhotosModel>(builder: (_, photoData, child) {
+    return Consumer<PhotosModel>(builder: (_, data, child) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
@@ -21,9 +21,9 @@ class PhotoListView extends StatelessWidget {
             const SizedBox(
               height: 8,
             ),
-            const Text(
-              '개당 최대 4.3MB, 10장까지 가능합니다',
-              style: TextStyle(
+            Text(
+              '개당 최대 4.3MB, ${data.MAX_IMAGE_COUNT}장까지 가능합니다',
+              style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
                   letterSpacing: -0.05,
@@ -40,7 +40,7 @@ class PhotoListView extends StatelessWidget {
               ),
             ),
             Text(
-              '현재 : ${photoData.photos.length}/10',
+              '현재 : ${data.photos.length}/${data.MAX_IMAGE_COUNT}',
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -50,12 +50,12 @@ class PhotoListView extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () async {
-                Map<String, dynamic> result = await photoData.selcetImages();
+                Map<String, dynamic> result = await data.selcetImages();
                 if (result['success']) {
-                  toastOn("성공", '사진을 불러오는데 성공했습니다');
+                  toastOn("불러오기 성공", '사진을 불러오는데 성공했습니다');
                 } else {
                   if (result['msg'] == 'exceed') {
-                    toastOn('사진 갯수 초과', '5장을 초과할 수 없습니다');
+                    toastOn('사진 갯수 초과', '${data.MAX_IMAGE_COUNT}장을 초과할 수 없습니다');
                   } else {
                     toastOn('의문의 에러', "계속되면 개발자에게 문의해주세요");
                   }
@@ -86,12 +86,11 @@ class PhotoListView extends StatelessWidget {
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
                   ),
-                  padding: const EdgeInsets.only(top: 10, bottom: 120),
-                  itemCount: photoData.photos.length,
+                  padding: const EdgeInsets.only(top: 10, bottom: 90),
+                  itemCount: data.photos.length,
                   itemBuilder: (context, idx) {
                     return Photo(
-                        imageInfo: photoData.photos[idx],
-                        modalOnFunc: modalOnFunc);
+                        imageInfo: data.photos[idx], modalOnFunc: modalOnFunc);
                   }),
             ),
           ],

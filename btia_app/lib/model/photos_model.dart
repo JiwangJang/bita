@@ -20,10 +20,12 @@ class PhotosModel extends ChangeNotifier {
   double curZoomLevel = 1.0;
   bool isFlashAuto = false;
   bool isUploading = false;
+  bool isAdding = false;
   bool isTakingPicture = false;
   bool pictureModal = false;
   late String deleteTarget;
   int curUploadedImage = 0;
+  int MAX_IMAGE_COUNT = 10;
 
   void setController(CameraController newController) {
     controller = newController;
@@ -33,7 +35,7 @@ class PhotosModel extends ChangeNotifier {
 
   Future<void> takePicture() async {
     if (isTakingPicture) return;
-    if (photos.length >= 10) {
+    if (photos.length >= MAX_IMAGE_COUNT) {
       pictureModal = true;
       notifyListeners();
       Future.delayed(const Duration(seconds: 1)).then((value) {
@@ -130,6 +132,7 @@ class PhotosModel extends ChangeNotifier {
       var request = http.MultipartRequest("POST", url);
       int MAX_BODY_SIZE = 4300000;
       final List<Map<String, dynamic>> exceedImages = [];
+
       for (var imageInfo in photos) {
         int remain = MAX_BODY_SIZE - request.contentLength;
         var image = http.MultipartFile.fromBytes(
@@ -138,6 +141,7 @@ class PhotosModel extends ChangeNotifier {
           contentType: contentType,
           filename: imageInfo['id'],
         );
+
         // 현재 이미지가 4.3MB가 넘을경우
         if (MAX_BODY_SIZE < image.length) {
           exceedImages.add(imageInfo);
@@ -147,21 +151,19 @@ class PhotosModel extends ChangeNotifier {
         // 현재 더이상 이미지를 욱여넣을수 없을경우
         if (remain < image.length) {
           var response = await request.send();
-          print(
-              "파일 크기 : ${request.contentLength}, 파일 수 : ${request.files.length}");
-          request.files.clear();
+          print(response.statusCode);
           curUploadedImage = uploadedKeys.length;
+          request = http.MultipartRequest("POST", url);
+          notifyListeners();
           if (response.statusCode == 500) {
             throw const FormatException('severErr');
-          } else {
-            throw const FormatException('appErr');
           }
         }
+
         request.files.add(image);
         uploadedKeys.add(imageInfo['id']);
-        notifyListeners();
-        print("curUploadedImage : $curUploadedImage, ${photos.length}");
       }
+
       // 마지막 한 개 남았을때 처리
       var response = await request.send();
       if (response.statusCode == 500) {
@@ -169,8 +171,8 @@ class PhotosModel extends ChangeNotifier {
       }
       isUploading = false;
       curUploadedImage = 0;
-      notifyListeners();
       photos.clear();
+      notifyListeners();
       // 아까 못넣은 것들 넣어줌
       if (exceedImages.isNotEmpty) {
         photos.addAll(exceedImages);
@@ -178,7 +180,9 @@ class PhotosModel extends ChangeNotifier {
       }
       return {"success": true};
     } catch (e) {
+      print("err $e");
       isUploading = false;
+      curUploadedImage = 0;
       photos.removeWhere((element) => uploadedKeys.contains(element['id']));
       notifyListeners();
       if (e is SocketException) {
@@ -186,7 +190,6 @@ class PhotosModel extends ChangeNotifier {
       }
 
       if (e is FormatException) {
-        print("err ${e.message}");
         switch (e.message) {
           case 'tooLarge':
             return {"success": false, "msg": "tooLarge"};
@@ -202,9 +205,13 @@ class PhotosModel extends ChangeNotifier {
 
   Future<Map<String, dynamic>> selcetImages() async {
     try {
+      isAdding = true;
+      notifyListeners();
       ImagePicker imagePicker = ImagePicker();
-      List<XFile> images = await imagePicker.pickMultiImage(imageQuality: 50);
-      if (photos.length + images.length > 10) {
+      List<XFile> images = await imagePicker.pickMultiImage(imageQuality: 30);
+      if (photos.length + images.length > MAX_IMAGE_COUNT) {
+        isAdding = false;
+        notifyListeners();
         return {"success": false, "msg": "exceed"};
       }
       for (var image in images) {
@@ -212,8 +219,12 @@ class PhotosModel extends ChangeNotifier {
         String imageId = getRandomId();
         addImage(imageId, imageBytes);
       }
+      isAdding = false;
+      notifyListeners();
       return {"success": true};
     } catch (e) {
+      isAdding = false;
+      notifyListeners();
       return {"success": false, "msg": "innerErr"};
     }
   }

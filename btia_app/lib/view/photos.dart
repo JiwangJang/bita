@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:btia_app/view/custom_appbar.dart';
+import 'package:btia_app/view/photosWidget/adding_indicator.dart';
 import 'package:btia_app/view/photosWidget/confirm_modal.dart';
 import 'package:btia_app/view/photosWidget/custom_toast.dart';
 import 'package:btia_app/view/photosWidget/photolist_view.dart';
@@ -77,9 +78,13 @@ class _PhotosState extends State<Photos> {
                 toastOnFunc: toastOn,
               ),
             ),
-            // 업로딩 원
+            // 업로딩 인디케이터
             const Positioned.fill(
               child: UploadingIndicator(),
+            ),
+            // 사진추가 인디케이터
+            const Positioned.fill(
+              child: AddingIndicator(),
             ),
             // 삭제할 때 모달
             Positioned.fill(
@@ -91,22 +96,23 @@ class _PhotosState extends State<Photos> {
             ),
             // 커스텀 토스트
             AnimatedPositioned(
-                left: 0,
-                right: 0,
-                bottom: toast ? 20 : -100,
-                duration: const Duration(milliseconds: 500),
-                onEnd: () {
-                  Timer(const Duration(seconds: 3), () {
-                    if (context.mounted) {
-                      toastOff();
-                    }
-                  });
-                },
-                curve: Curves.easeInOut,
-                child: CustomToast(
-                  mainMessage: toastMainMessage,
-                  subMessage: toastSubMessage,
-                )),
+              left: 0,
+              right: 0,
+              bottom: toast ? 80 : -100,
+              duration: const Duration(milliseconds: 500),
+              onEnd: () {
+                Timer(const Duration(seconds: 2), () {
+                  if (context.mounted) {
+                    toastOff();
+                  }
+                });
+              },
+              curve: Curves.easeInOut,
+              child: CustomToast(
+                mainMessage: toastMainMessage,
+                subMessage: toastSubMessage,
+              ),
+            ),
           ],
         ));
   }

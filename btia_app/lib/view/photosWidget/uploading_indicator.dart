@@ -12,24 +12,28 @@ class UploadingIndicator extends StatelessWidget {
       builder: (context, data, child) {
         return Visibility(
           visible: data.isUploading,
-          child: Container(
-            color: const Color.fromRGBO(0, 0, 0, 0.6),
-            child: Center(
-                child: CircularPercentIndicator(
-              radius: 60,
-              lineWidth: 5,
-              percent: data.photos.isEmpty
-                  ? 1
-                  : data.curUploadedImage / data.photos.length,
-              center: const Text(
-                '업로드중',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700),
-              ),
-              progressColor: const Color.fromRGBO(255, 107, 0, 1),
-            )),
+          child: AnimatedOpacity(
+            opacity: data.isUploading ? 1 : 0,
+            duration: const Duration(seconds: 3),
+            child: Container(
+              color: const Color.fromRGBO(0, 0, 0, 0.6),
+              child: Center(
+                  child: CircularPercentIndicator(
+                radius: 60,
+                lineWidth: 5,
+                percent: data.photos.isEmpty
+                    ? 1
+                    : data.curUploadedImage / data.photos.length,
+                center: const Text(
+                  '업로드중',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700),
+                ),
+                progressColor: const Color.fromRGBO(255, 107, 0, 1),
+              )),
+            ),
           ),
         );
       },
