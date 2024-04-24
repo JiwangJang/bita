@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 class CustomToast extends StatelessWidget {
-  const CustomToast(
-      {required this.mainMessage, required this.subMessage, super.key});
+  const CustomToast({
+    required this.mainMessage,
+    required this.subMessage,
+    super.key,
+  });
   final String mainMessage;
   final String subMessage;
 

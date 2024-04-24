@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final GoRouter _router = GoRouter(
   initialLocation: '/',
@@ -49,9 +50,16 @@ Future<void> main() async {
     DeviceOrientation.portraitDown,
   ]);
 
+  // 업데이트 유도 모달이 필요한지
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final int? checkDate = prefs.getInt('checkDate');
+  final int today = DateTime.now().day;
+  bool todayCheck = today == checkDate;
+
   final List<CameraDescription> cameras = await availableCameras();
   runApp(ChangeNotifierProvider(
-    create: (context) => PhotosModel(cameras: cameras, code: code),
+    create: (context) =>
+        PhotosModel(cameras: cameras, code: code, todayCheck: todayCheck),
     child: SafeArea(
       child: MaterialApp.router(
         builder: (context, child) {

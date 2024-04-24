@@ -10,7 +10,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class PhotosModel extends ChangeNotifier {
-  PhotosModel({required this.cameras, required this.code});
+  PhotosModel({
+    required this.cameras,
+    required this.code,
+    required this.todayCheck,
+  });
   final String code;
   final List<CameraDescription> cameras;
   final List<Map<String, dynamic>> photos = [];
@@ -23,6 +27,7 @@ class PhotosModel extends ChangeNotifier {
   bool isAdding = false;
   bool isTakingPicture = false;
   bool pictureModal = false;
+  bool todayCheck;
   late String deleteTarget;
   int curUploadedImage = 0;
   int MAX_IMAGE_COUNT = 20;

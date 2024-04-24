@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Camera extends StatefulWidget {
   const Camera({super.key});
@@ -24,7 +25,7 @@ class _CameraState extends State<Camera> {
   bool isForce = false;
   bool modal = false;
 
-  void modalOff() {
+  void modalOff() async {
     setState(() {
       modal = false;
     });
@@ -33,23 +34,26 @@ class _CameraState extends State<Camera> {
   @override
   void initState() {
     super.initState();
-    versionChecker().then((value) {
-      bool update = value['update'] as bool;
-      bool force = value['force'] as bool;
-      print("$update $force");
-      if (update && force) {
-        setState(() {
-          modal = true;
-          isUpdate = true;
-          isForce = true;
-        });
-      } else if (update) {
-        setState(() {
-          modal = true;
-          isUpdate = true;
-        });
-      }
-    });
+    bool doCheck = Provider.of<PhotosModel>(context, listen: false).todayCheck;
+    if (!doCheck) {
+      versionChecker().then((value) {
+        bool update = value['update'] as bool;
+        bool force = value['force'] as bool;
+        if (update && force) {
+          setState(() {
+            modal = true;
+            isUpdate = true;
+            isForce = true;
+          });
+        } else if (update) {
+          setState(() {
+            modal = true;
+            isUpdate = true;
+          });
+        }
+      });
+    }
+
     final List<CameraDescription> cameras =
         Provider.of<PhotosModel>(context, listen: false).cameras;
     _controller = CameraController(cameras.first, ResolutionPreset.veryHigh,
@@ -65,7 +69,6 @@ class _CameraState extends State<Camera> {
 
   @override
   Widget build(BuildContext context) {
-    print(modal);
     return Scaffold(
       body: Stack(
         children: [
@@ -119,6 +122,8 @@ Future<Map<String, bool>> versionChecker() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     var [originMajor, originMinor, _] = packageInfo.version.split('.');
     var [latestMajor, latestMinor, _] = latestVersion.split('.');
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('checkDate', DateTime.now().day);
     if (int.parse(originMajor) < int.parse(latestMajor)) {
       return {
         'update': true,
@@ -135,7 +140,6 @@ Future<Map<String, bool>> versionChecker() async {
       'force': false,
     };
   } catch (e) {
-    print(e);
     return {
       'update': false,
       'force': false,

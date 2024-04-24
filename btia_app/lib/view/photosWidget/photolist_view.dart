@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PhotoListView extends StatelessWidget {
-  const PhotoListView(
-      {required this.modalOnFunc, required this.toastOn, super.key});
+  const PhotoListView({
+    required this.modalOnFunc,
+    required this.toastOn,
+    super.key,
+  });
 
   final Function modalOnFunc;
   final Function toastOn;

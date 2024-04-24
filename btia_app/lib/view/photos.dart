@@ -5,6 +5,7 @@ import 'package:btia_app/view/photosWidget/adding_indicator.dart';
 import 'package:btia_app/view/photosWidget/confirm_modal.dart';
 import 'package:btia_app/view/photosWidget/custom_toast.dart';
 import 'package:btia_app/view/photosWidget/photolist_view.dart';
+import 'package:btia_app/view/photosWidget/save_btn.dart';
 import 'package:btia_app/view/photosWidget/upload_btn.dart';
 import 'package:btia_app/view/photosWidget/uploading_indicator.dart';
 import 'package:flutter/material.dart';
@@ -74,8 +75,15 @@ class _PhotosState extends State<Photos> {
               bottom: 0,
               left: 0,
               right: 0,
-              child: UploadBtn(
-                toastOnFunc: toastOn,
+              child: Row(
+                children: [
+                  SaveBtn(
+                    toastOnFunc: toastOn,
+                  ),
+                  UploadBtn(
+                    toastOnFunc: toastOn,
+                  ),
+                ],
               ),
             ),
             // 업로딩 인디케이터

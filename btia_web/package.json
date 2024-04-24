@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.554.0",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20.12.7",
     "@vercel/postgres": "^0.8.0",
     "file-saver": "^2.0.5",
+    "js-cookie": "^3.0.5",
     "jszip": "^3.10.1",
     "next": "14.1.4",
     "react": "^18",

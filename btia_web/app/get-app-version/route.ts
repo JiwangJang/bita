@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
 export function GET() {
-    return NextResponse.json({ version: "0.2.0" });
+    // 앱 최신버전 입력
+    return NextResponse.json({ version: "0.1.0" });
 }

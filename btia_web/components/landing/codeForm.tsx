@@ -36,6 +36,10 @@ function CodeForm({ availableClose = true, setUserCode }: Props) {
             target.value = formerCodeRef.current;
             return;
         }
+        if (!value.match(/^\d+$/) && value.length > 0) {
+            target.value = formerCodeRef.current;
+            return alert("숫자만 입력하세요");
+        }
         formerCodeRef.current = value;
     };
     const secondInputEvent = (e: FormEvent) => {
@@ -45,6 +49,10 @@ function CodeForm({ availableClose = true, setUserCode }: Props) {
         if (value.length > 4) {
             target.value = latterCodeRef.current;
             return;
+        }
+        if (!value.match(/^\d+$/) && value.length > 0) {
+            target.value = latterCodeRef.current;
+            return alert("숫자만 입력하세요");
         }
         latterCodeRef.current = value;
     };
@@ -57,9 +65,6 @@ function CodeForm({ availableClose = true, setUserCode }: Props) {
         const USERCODE = `${former}-${latter}`;
         setLoading(true);
 
-        const MONTH_SECOND = 3600 * 24 * 30;
-
-        document.cookie = `btia_user_code = ${USERCODE}; max-age=${MONTH_SECOND}`;
         if (availableClose) {
             router.push(`/image-view`);
         } else {
@@ -96,7 +101,7 @@ function CodeForm({ availableClose = true, setUserCode }: Props) {
                     font-[700] md:text-[32px] text-[24px] cursor-pointer mb-[4px] fill-btn ${loading ? "working" : ""}`}
                     onClick={verifyCode}
                 >
-                    {loading ? "검증중.." : "입력"}
+                    입력
                 </div>
                 <p className="text-[20px]">앱 우측하단 열쇠아이콘 클릭하시면, 나의 코드를 보실수 있습니다</p>
             </div>
