@@ -123,18 +123,19 @@ Future<Map<String, bool>> versionChecker() async {
     var [originMajor, originMinor, _] = packageInfo.version.split('.');
     var [latestMajor, latestMinor, _] = latestVersion.split('.');
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt('checkDate', DateTime.now().day);
     if (int.parse(originMajor) < int.parse(latestMajor)) {
       return {
         'update': true,
         'force': true,
       };
     } else if (int.parse(originMinor) < int.parse(latestMinor)) {
+      prefs.setInt('checkDate', DateTime.now().day);
       return {
         'update': true,
         'force': false,
       };
     }
+    prefs.setInt('checkDate', DateTime.now().day);
     return {
       'update': false,
       'force': false,

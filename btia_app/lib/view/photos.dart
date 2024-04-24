@@ -76,9 +76,13 @@ class _PhotosState extends State<Photos> {
               left: 0,
               right: 0,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SaveBtn(
                     toastOnFunc: toastOn,
+                  ),
+                  const SizedBox(
+                    width: 12,
                   ),
                   UploadBtn(
                     toastOnFunc: toastOn,

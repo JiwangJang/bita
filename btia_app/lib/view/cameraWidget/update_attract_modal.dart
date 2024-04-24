@@ -47,12 +47,14 @@ class UpdateAttractModal extends StatelessWidget {
                   height: 12,
                 ),
                 isForce
-                    ? const Text(
-                        '필수 업데이트입니다',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          height: 1.1,
+                    ? const Expanded(
+                        child: Text(
+                          '필수 업데이트입니다',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            height: 1.1,
+                          ),
                         ),
                       )
                     : const Expanded(
@@ -90,7 +92,7 @@ class UpdateAttractModal extends StatelessWidget {
                             foundation.TargetPlatform.android;
                         String storeUrl = isAndroid
                             ? 'https://play.google.com/store/apps/details?id=jiwang.btia_app'
-                            : '';
+                            : '앱스토어 링크';
 
                         // 안드로이드, 아이폰 구분하기
                         launchUrl(Uri.parse(storeUrl));

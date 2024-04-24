@@ -18,7 +18,9 @@ class CameraModal extends StatelessWidget {
           ),
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
           child: Text(
-            data.photos.length >= 5 ? "최대 5장까지 촬영가능합니다" : '사진을 촬영했습니다',
+            data.photos.length > data.MAX_IMAGE_COUNT
+                ? "최대 ${data.MAX_IMAGE_COUNT}장까지 촬영가능합니다"
+                : '사진을 촬영했습니다',
             style: const TextStyle(
               fontSize: 20,
               color: Colors.white,

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:http_parser/src/media_type.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -156,7 +157,6 @@ class PhotosModel extends ChangeNotifier {
         // 현재 더이상 이미지를 욱여넣을수 없을경우
         if (remain < image.length) {
           var response = await request.send();
-          print(response.statusCode);
           curUploadedImage = uploadedKeys.length;
           request = http.MultipartRequest("POST", url);
           notifyListeners();
@@ -185,7 +185,6 @@ class PhotosModel extends ChangeNotifier {
       }
       return {"success": true};
     } catch (e) {
-      print("err $e");
       isUploading = false;
       curUploadedImage = 0;
       photos.removeWhere((element) => uploadedKeys.contains(element['id']));
@@ -231,6 +230,25 @@ class PhotosModel extends ChangeNotifier {
       isAdding = false;
       notifyListeners();
       return {"success": false, "msg": "innerErr"};
+    }
+  }
+
+  Future<bool> saveImages() async {
+    try {
+      if (photos.isEmpty) return false;
+      for (var imageInfo in photos) {
+        await ImageGallerySaver.saveImage(
+          imageInfo['image'],
+          quality: 70,
+          name: imageInfo['id'],
+        );
+      }
+      photos.clear();
+      notifyListeners();
+
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 }

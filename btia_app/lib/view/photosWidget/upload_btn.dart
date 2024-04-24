@@ -28,6 +28,9 @@ class UploadBtn extends StatelessWidget {
               bgColor: const Color.fromRGBO(255, 107, 0, 1),
               btnTitle: "업로드",
               onTapFunc: () async {
+                if (data.isAdding) {
+                  return;
+                }
                 Map<String, dynamic> result = await data.uploadImages();
                 late String mainMsg;
                 late String subMsg;

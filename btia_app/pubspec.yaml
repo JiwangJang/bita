@@ -48,6 +48,7 @@ dependencies:
     percent_indicator: ^4.2.3
     package_info_plus: ^8.0.0
     shared_preferences: ^2.2.3
+    image_gallery_saver: ^2.0.3
 
 dev_dependencies:
     flutter_launcher_icons: "^0.13.1"

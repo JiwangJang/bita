@@ -23,38 +23,16 @@ class SaveBtn extends StatelessWidget {
       ),
       child: Center(
         child: CustomButton(
-          bgColor: Color.fromARGB(255, 163, 163, 163),
-          btnTitle: "기기에 저장",
+          bgColor: const Color.fromARGB(255, 98, 98, 98),
+          btnTitle: "저장",
           onTapFunc: () async {
-            // Map<String, dynamic> result = await data.uploadImages();
-            // late String mainMsg;
-            // late String subMsg;
-            // if (result['success']) {
-            //   mainMsg = '업로드 성공';
-            //   subMsg = '사이트에서 확인해보세요!';
-            // } else {
-            //   switch (result['msg']) {
-            //     case 'empty':
-            //       subMsg = '우선 촬영부터 해주세요';
-            //       break;
-            //     case 'network':
-            //       subMsg = '인터넷연결을 확인해주세요';
-            //       break;
-            //     case 'appErr':
-            //       subMsg = '개발자에게 문의해주세요';
-            //       break;
-            //     case 'serverErr':
-            //       subMsg = '잠시후 다시 시도해보세요';
-            //       break;
-            //     case 'tooLarge':
-            //       subMsg = '너무 커서 보내지 못한\n사진을 남겼습니다';
-            //     default:
-            //       subMsg = '잠시후 다시 시도해보세요';
-            //       break;
-            //   }
-            //   mainMsg = '업로드 실패';
-            // }
-            // toastOnFunc(mainMsg, subMsg);
+            bool result = await Provider.of<PhotosModel>(context, listen: false)
+                .saveImages();
+
+            toastOnFunc(
+              result ? '저장 성공' : '저장 실패',
+              result ? '기기에 저장했습니다' : '기기에 저장하지 못했습니다',
+            );
           },
         ),
       ),
