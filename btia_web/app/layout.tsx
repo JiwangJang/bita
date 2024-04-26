@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
     title: "출장사진저장소",
@@ -24,6 +25,7 @@ export default function RootLayout({
                 <Header />
                 {children}
                 <Footer />
+                <Analytics />
             </body>
         </html>
     );
