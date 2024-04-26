@@ -65,6 +65,9 @@ function CodeForm({ availableClose = true, setUserCode }: Props) {
         const USERCODE = `${former}-${latter}`;
         setLoading(true);
 
+        const MONTH = 3600 * 60 * 30;
+        document.cookie = `btia_user_code=${USERCODE}; max-age=${MONTH}`;
+
         if (availableClose) {
             router.push(`/image-view`);
         } else {
