@@ -272,3 +272,17 @@ input {
     top: 70%;
     right: 25%;
 }
+
+.down-and-delete {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 1px solid var(--primary);
+}
+.down-and-delete.true {
+    background-color: var(--primary);
+    background-image: url(/image/check.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
+}
