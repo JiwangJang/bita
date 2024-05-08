@@ -5,13 +5,13 @@ import { useState } from "react";
 
 function ImageItem({ imagePath }: { imagePath: string }) {
     const [err, setErr] = useState<string | null>(null);
-    const S3_ROOT = "https://waterfacilitybucket.s3.ap-northeast-2.amazonaws.com/";
+    const cloudFront = "https://de9nqjthi7764.cloudfront.net/";
 
     return (
         <div className="bg-gray-100 max-h-[384px] h-[30vw] relative dashboard-image-item cursor-pointer">
             <div className="absolute top-[5%] right-[5%] xl:w-[54px] xl:h-[54px] w-[4.5vw] h-[4.5vw] min-h-[36px] min-w-[36px] z-10 rounded-full check-circle"></div>
             <Image
-                src={err ? err : `${S3_ROOT}${imagePath}`}
+                src={err ? err : `${cloudFront}${imagePath}`}
                 onError={() => setErr("/image/error.png")}
                 className="user-image"
                 data-image-path={imagePath}
