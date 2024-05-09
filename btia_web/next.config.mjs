@@ -5,7 +5,7 @@ const config = {
         remotePatterns: [
             {
                 protocol: "https",
-                hostname: "waterfacilitybucket.s3.ap-northeast-2.amazonaws.com",
+                hostname: "de9nqjthi7764.cloudfront.net",
                 pathname: "/**",
             },
         ],

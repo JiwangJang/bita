@@ -15,6 +15,7 @@ function ImageItem({ imagePath }: { imagePath: string }) {
                 onError={() => setErr("/image/error.png")}
                 className="user-image"
                 data-image-path={imagePath}
+                crossOrigin="anonymous"
                 fill
                 sizes="100%"
                 alt="사용자가 올린 이미지"
