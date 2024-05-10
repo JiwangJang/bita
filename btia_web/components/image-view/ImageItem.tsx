@@ -11,7 +11,7 @@ function ImageItem({ imagePath }: { imagePath: string }) {
         <div className="bg-gray-100 max-h-[384px] h-[30vw] relative dashboard-image-item cursor-pointer">
             <div className="absolute top-[5%] right-[5%] xl:w-[54px] xl:h-[54px] w-[4.5vw] h-[4.5vw] min-h-[36px] min-w-[36px] z-10 rounded-full check-circle"></div>
             <Image
-                src={err ? err : `${cloudFront}${imagePath}`}
+                src={err ? err : `${cloudFront}${imagePath}?noCache`}
                 onError={() => setErr("/image/error.png")}
                 className="user-image"
                 data-image-path={imagePath}

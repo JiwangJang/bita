@@ -2,13 +2,6 @@
 const config = {
     images: {
         unoptimized: true,
-        remotePatterns: [
-            {
-                protocol: "https",
-                hostname: "de9nqjthi7764.cloudfront.net",
-                pathname: "/**",
-            },
-        ],
     },
 };
 
