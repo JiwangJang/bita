@@ -338,3 +338,19 @@ input {
     background-repeat: no-repeat;
     background-size: 16px 16px;
 }
+
+.developer-info p {
+    display: flex;
+    gap: 4px;
+}
+
+.developer-info p span {
+    display: inline-block;
+    width: 70px;
+    display: flex;
+    justify-content: space-between;
+}
+
+i {
+    font-style: normal;
+}
