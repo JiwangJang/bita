@@ -31,8 +31,7 @@ export default function ImageView({ cookieUserCode }: { cookieUserCode: string }
     const [codeFormOn, setCodeFormOn] = useState<boolean>(false);
     const [userCode, setUserCode] = useState(useSearchParams().get("userCode") ?? "");
     const [err, setErr] = useState<string>("");
-    const downAndDelete = useRef(true);
-    const downAndDeleteCheckBox = useRef<HTMLDivElement>(null);
+    const infoModalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         document.body.style.overflow = "auto";
@@ -51,6 +50,11 @@ export default function ImageView({ cookieUserCode }: { cookieUserCode: string }
                     setErr(result.err);
                 }
             });
+        }
+
+        const changeCheck = localStorage.getItem("d22kd3");
+        if (changeCheck !== "check") {
+            infoModalRef.current?.classList.add("active");
         }
     }, [userCode, cookieUserCode]);
 
@@ -101,25 +105,26 @@ export default function ImageView({ cookieUserCode }: { cookieUserCode: string }
             });
         }
 
-        if (downAndDelete.current) {
-            const imgPaths = ArrayImgElems.map((elem) => elem.getAttribute("data-image-path"));
-            if (infoData) {
-                const newInfodata = infoData.reduce((acc: any, cur) => {
-                    const oldCur = cur[1] as any;
-                    const newCur = oldCur.filter((path: string) =>
-                        imgPaths.every((seletedPath) => path !== seletedPath)
-                    );
-                    acc.push([cur[0], newCur]);
-                    return acc;
-                }, []);
-                setInfoData(newInfodata);
-                fetch("/delete", {
-                    method: "POST",
-                    body: JSON.stringify(imgPaths),
-                });
-            }
+        const imgPaths = ArrayImgElems.map((elem) => elem.getAttribute("data-image-path"));
+        if (infoData) {
+            const newInfodata = infoData.reduce((acc: any, cur) => {
+                const oldCur = cur[1] as any;
+                const newCur = oldCur.filter((path: string) => imgPaths.every((seletedPath) => path !== seletedPath));
+                acc.push([cur[0], newCur]);
+                return acc;
+            }, []);
+            setInfoData(newInfodata);
+            fetch("/delete", {
+                method: "POST",
+                body: JSON.stringify(imgPaths),
+            });
         }
+
         setDownload(false);
+    };
+    const infoModalOff = () => {
+        localStorage.setItem("d22kd3", "check");
+        infoModalRef.current?.classList.remove("active");
     };
     return (
         <div className="max-w-[1200px] xl:px-0 px-[20px] m-auto min-h-[calc(100vh-100px)] py-[36px] flex flex-col">
@@ -148,7 +153,7 @@ export default function ImageView({ cookieUserCode }: { cookieUserCode: string }
                         지금까지 업로드한 사진들
                     </p>
                     <div className="flex xl:gap-[12px] gap-[1vw] items-center">
-                        <p className="xl:text-[32px] sm:text-[2.5vw]">보관기간은 업로드시점부터 일주일입니다</p>
+                        <p className="xl:text-[32px] sm:text-[2.5vw]">다운 즉시 서버에서 삭제됩니다</p>
                         <div
                             className="sm:text-[18px] text-[14px] md:px-[12px] md:py-[4px] px-[8px] py-[2px] rounded-full ghost-btn"
                             onClick={() => {
@@ -158,16 +163,6 @@ export default function ImageView({ cookieUserCode }: { cookieUserCode: string }
                         >
                             유저코드 변경
                         </div>
-                    </div>
-                    <div
-                        className="flex gap-[4px] mt-[8px] text-[20px] items-center cursor-pointer w-fit"
-                        onClick={() => {
-                            downAndDelete.current = !downAndDelete.current;
-                            downAndDeleteCheckBox.current?.classList.toggle("true");
-                        }}
-                    >
-                        <p>다운로드와 동시에 삭제하기</p>
-                        <div className="down-and-delete true" ref={downAndDeleteCheckBox}></div>
                     </div>
                     <div className="xl:mt-[28px] mt-[2vw]">
                         {infoData ? (
@@ -184,6 +179,32 @@ export default function ImageView({ cookieUserCode }: { cookieUserCode: string }
                     {codeFormOn && <CodeForm availableClose={false} setUserCode={setUserCode} />}
                 </>
             )}
+            <div className="info-modal" ref={infoModalRef}>
+                <div className="info-modal-content">
+                    <p className="text-[32px] font-[900] mb-[12px]">변경사항 발생에 따른 안내</p>
+                    <div className="paragraph">
+                        <span>1.</span>
+                        <p>귀하의 무궁한 발전을 기원합니다</p>
+                    </div>
+                    <div className="paragraph">
+                        <span>2.</span>
+                        <p>
+                            기존에는 사진보관기간을 일주일로 했으나, 운영과정에서 해당기능이 제대로 동작하지 않는것을
+                            확인했습니다. 하여,
+                            <span className="underline underline-offset-4 font-bold">
+                                강제로 다운 즉시 삭제되는 방식으로 변경함을 알려드립니다.
+                            </span>
+                            &nbsp;&nbsp;끝.
+                        </p>
+                    </div>
+                    <div
+                        className="fill-btn py-[16px] w-[100px] rounded-[16px] float-right text-[20px] mt-[12px]"
+                        onClick={infoModalOff}
+                    >
+                        <p>확인</p>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
