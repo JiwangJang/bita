@@ -220,14 +220,22 @@ input {
 .info-modal.active {
     visibility: visible;
     opacity: 1;
-    display: flex;
 }
 
 .info-modal-content {
+    opacity: 0;
+    transform: translateY(20%);
     padding: 32px 28px;
     background-color: white;
     border-radius: 16px;
     width: 30vw;
+    transition: all 0.5s;
+    transition-delay: 0.1s;
+}
+
+.info-modal-content.active {
+    opacity: 1;
+    transform: translateY(0%);
 }
 
 .paragraph {
