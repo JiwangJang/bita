@@ -4,6 +4,7 @@ import 'package:btia_app/view/layoutWidget/button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/foundation.dart' as foundation;
 
 class Code extends StatelessWidget {
   const Code({super.key});
@@ -34,35 +35,62 @@ class Code extends StatelessWidget {
           child: CustomAppbar(
             title: '나의코드',
           )),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              code,
-              style: const TextStyle(
-                  fontSize: 48,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -1,
-                  height: 1),
+      body: Stack(
+        children: [
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  code,
+                  style: const TextStyle(
+                      fontSize: 48,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -1,
+                      height: 1),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Text(
+                    '저희 웹사이트 접속시 입력하시면,\n업로드한 사진들을 보실 수 있습니다\n타인에게 노출하지 마세요',
+                    style: bodyStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                CustomButton(
+                  btnTitle: '웹사이트 방문',
+                  bgColor: const Color.fromRGBO(255, 107, 0, 1),
+                  onTapFunc: () =>
+                      launchUrl(Uri.parse('https://btia.app?userCode=$code')),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Text(
-                '저희 웹사이트 접속시 입력하시면,\n업로드한 사진들을 보실 수 있습니다\n타인에게 노출하지 마세요',
-                style: bodyStyle,
-                textAlign: TextAlign.center,
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: GestureDetector(
+              onTap: () {
+                if (foundation.defaultTargetPlatform ==
+                    foundation.TargetPlatform.iOS) {
+                  // 앱스토어 열기
+                }
+                launchUrl(Uri.parse("market://details?id=quote.post.c90cb169"));
+              },
+              child: Container(
+                height: 100,
+                decoration: const BoxDecoration(
+                  color: Colors.black,
+                  image: DecorationImage(
+                    image: AssetImage("assets/quote-post-ads.png"),
+                  ),
+                ),
               ),
             ),
-            CustomButton(
-              btnTitle: '웹사이트 방문',
-              bgColor: const Color.fromRGBO(255, 107, 0, 1),
-              onTapFunc: () =>
-                  launchUrl(Uri.parse('https://btia.app?userCode=$code')),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

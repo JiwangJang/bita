@@ -27,27 +27,47 @@ class _CameraBottomBarState extends State<CameraBottomBar> {
                 children: [
                   GestureDetector(
                     onTap: () => context.push('/photos'),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: const Color.fromRGBO(57, 57, 57, 1),
-                      ),
-                      width: 64,
-                      height: 64,
-                      clipBehavior: Clip.hardEdge,
-                      child: data.photos.isEmpty
-                          ? const SizedBox()
-                          : Image.memory(data.photos.last['image'],
-                              fit: BoxFit.cover),
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: const Color.fromRGBO(57, 57, 57, 1),
+                          ),
+                          width: 64,
+                          height: 64,
+                          clipBehavior: Clip.hardEdge,
+                          child: data.photos.isEmpty
+                              ? const SizedBox()
+                              : Image.memory(data.photos.last['image'],
+                                  fit: BoxFit.cover),
+                        ),
+                        const Text(
+                          "사진보기",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        )
+                      ],
                     ),
                   ),
                   CustomtakePictureBtn(pictureFunc: data.takePicture),
                   GestureDetector(
                     onTap: () => context.push('/code'),
-                    child: const Icon(
-                      Icons.vpn_key_rounded,
-                      size: 64,
-                      color: Colors.white,
+                    child: const Column(
+                      children: [
+                        Icon(
+                          Icons.vpn_key_rounded,
+                          size: 64,
+                          color: Colors.white,
+                        ),
+                        Text(
+                          "코드보기",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        )
+                      ],
                     ),
                   )
                 ],

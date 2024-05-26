@@ -70,6 +70,7 @@ class _CameraState extends State<Camera> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
           FutureBuilder(
@@ -89,7 +90,7 @@ class _CameraState extends State<Camera> {
                 } else {
                   return const Center(
                     child: CircularProgressIndicator(
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   );
                 }
