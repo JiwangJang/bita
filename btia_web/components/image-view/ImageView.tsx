@@ -65,40 +65,17 @@ export default function ImageView({ cookieUserCode }: { cookieUserCode: string }
         // 사용자 접속 체크
         const logDate = localStorage.getItem("log");
         const today = new Date();
-        const firebaseConfig = {
-            apiKey: "AIzaSyDVae7rl6EJCNX2Rzr07cY9AktcTMPd9Zo",
-            authDomain: "water-facility.firebaseapp.com",
-            projectId: "water-facility",
-            storageBucket: "water-facility.appspot.com",
-            messagingSenderId: "226407718816",
-            appId: "1:226407718816:web:4921c79fe6e2900c768ec5",
-            measurementId: "G-R41KDFLL0W",
-        };
-        const app = initializeApp(firebaseConfig);
-        const firestore = getFirestore(app);
         const docId = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-        const visitorCheckDoc = doc(firestore, "btia", docId);
-        getDoc(visitorCheckDoc).then((doc) => {
-            if (doc.exists()) {
-                const origin = doc.data();
-                if (Number(logDate) !== today.getDate()) {
-                    updateDoc(visitorCheckDoc, {
-                        user: origin.user + 1,
-                        page_view: origin.page_view + 1,
-                    });
-                } else {
-                    updateDoc(visitorCheckDoc, {
-                        page_view: origin.page_view + 1,
-                    });
+        // 날짜가 같으면 page_view만 올라감
+        const isFirstAccess = !(Number(logDate) === today.getDate());
+
+        fetch(`/logging?docId=${docId}&isFirstAccess=${isFirstAccess}`)
+            .then((res) => res.json())
+            .then((result) => {
+                if (result.success) {
+                    localStorage.setItem("log", String(today.getDate()));
                 }
-            } else {
-                setDoc(visitorCheckDoc, {
-                    user: 1,
-                    page_view: 1,
-                });
-            }
-            localStorage.setItem("log", String(today.getDate()));
-        });
+            });
     }, [userCode, cookieUserCode]);
 
     const checkCounter = (e: MouseEvent) => {
