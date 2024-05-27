@@ -8,7 +8,6 @@ export async function GET(req: NextRequest) {
         const docId = searchParams.get("docId");
         const isFirstAccess = JSON.parse(searchParams.get("isFirstAccess") ?? "false");
         if (!docId) return NextResponse.json({ success: false });
-        console.log(docId, isFirstAccess);
         const firebaseConfig = {
             apiKey: process.env.FIREBASE_API_KEY,
             authDomain: process.env.FIREBASE_AUTH_DOMAIN,
