@@ -228,7 +228,7 @@ input {
     padding: 32px 28px;
     background-color: white;
     border-radius: 16px;
-    width: 30vw;
+    width: 50vw;
     transition: all 0.5s;
     transition-delay: 0.1s;
 }
@@ -252,6 +252,19 @@ input {
 .paragraph p {
     line-height: 1.3em;
     width: fit-content;
+}
+
+@media (min-width: 1200px) {
+    .info-modal-content {
+        width: 30vw;
+    }
+}
+
+@media (max-width: 600px) {
+    .info-modal-content {
+        padding: 28px 24px;
+        width: 80vw;
+    }
 }
 
 @keyframes skeleton {
