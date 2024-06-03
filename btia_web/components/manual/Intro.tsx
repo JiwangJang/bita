@@ -31,7 +31,7 @@ function Intro() {
     return (
         <div className="h-[100vh] flex justify-center items-center relative intro">
             <p
-                className="text-white text-[100px] font-[900]"
+                className="text-white xl:text-[100px] sm:text-[10vw] text-[44px] font-[900]"
                 ref={ment}
                 style={{
                     opacity: 0,
@@ -42,7 +42,7 @@ function Intro() {
                 어떻게 사용하지?
             </p>
             <div
-                className="absolute w-[60vw] h-[25vw] bg-primary rounded-[100%] -z-10 blur-[120px]"
+                className="absolute sm:w-[60vw] w-[400px] h-[25vw] bg-primary rounded-[100%] -z-10 sm:blur-[120px] blur-[50px]"
                 style={{
                     opacity: 0,
                     transition: "all 1s",

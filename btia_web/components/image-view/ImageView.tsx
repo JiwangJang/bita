@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, MouseEvent, MutableRefObject, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, MouseEvent, SetStateAction, useEffect, useRef, useState } from "react";
 import ImageSkeleton from "./ImageSkeleton";
 import ImageDashboard from "./ImageDashboard";
 import SelectDownload from "./SelectDownload";
@@ -8,8 +8,6 @@ import CodeForm from "../landing/codeForm";
 import { useSearchParams } from "next/navigation";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import { initializeApp } from "firebase/app";
-import { doc, getDoc, getFirestore, setDoc, updateDoc } from "firebase/firestore";
 
 export type ImageInfo = string[] | string;
 
@@ -27,14 +25,12 @@ async function getImageInfo(userCode: string) {
     return json;
 }
 
-export default function ImageView({ cookieUserCode }: { cookieUserCode: string }) {
+export default function mageView({ cookieUserCode }: { cookieUserCode: string }) {
     const [infoData, setInfoData] = useState<ImageInfo[] | null>(null);
     const [checkCount, setCheckCount] = useState<number>(0);
     const [codeFormOn, setCodeFormOn] = useState<boolean>(false);
     const [userCode, setUserCode] = useState(useSearchParams().get("userCode") ?? "");
     const [err, setErr] = useState<string>("");
-    const infoModalRef = useRef<HTMLDivElement>(null);
-    const infoModalContentRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         document.body.style.overflow = "auto";
@@ -53,13 +49,6 @@ export default function ImageView({ cookieUserCode }: { cookieUserCode: string }
                     setErr(result.err);
                 }
             });
-        }
-
-        // 모달온
-        const changeCheck = localStorage.getItem("d22kd3");
-        if (changeCheck !== "check") {
-            infoModalRef.current?.classList.add("active");
-            infoModalContentRef.current?.classList.add("active");
         }
 
         // 사용자 접속 체크
@@ -142,10 +131,7 @@ export default function ImageView({ cookieUserCode }: { cookieUserCode: string }
 
         setDownload(false);
     };
-    const infoModalOff = () => {
-        localStorage.setItem("d22kd3", "check");
-        infoModalRef.current?.classList.remove("active");
-    };
+
     return (
         <div className="max-w-[1200px] xl:px-0 px-[20px] m-auto min-h-[calc(100vh-100px)] py-[36px] flex flex-col">
             {err ? (
@@ -199,32 +185,6 @@ export default function ImageView({ cookieUserCode }: { cookieUserCode: string }
                     {codeFormOn && <CodeForm availableClose={false} setUserCode={setUserCode} />}
                 </>
             )}
-            <div className="info-modal" ref={infoModalRef}>
-                <div className="info-modal-content" ref={infoModalContentRef}>
-                    <p className="text-[32px] font-[900] mb-[12px]">변경사항 발생에 따른 안내</p>
-                    <div className="paragraph">
-                        <span>1.</span>
-                        <p>귀하의 무궁한 발전을 기원합니다</p>
-                    </div>
-                    <div className="paragraph">
-                        <span>2.</span>
-                        <p>
-                            기존에는 사진보관기간을 일주일로 했으나, 운영과정에서 해당기능이 제대로 동작하지 않는것을
-                            확인했습니다. 하여,
-                            <span className="underline underline-offset-4 font-bold">
-                                강제로 다운 즉시 삭제되는 방식으로 변경함을 알려드립니다.
-                            </span>
-                            &nbsp;&nbsp;끝.
-                        </p>
-                    </div>
-                    <div
-                        className="fill-btn py-[16px] w-[100px] rounded-[16px] float-right text-[20px] mt-[12px]"
-                        onClick={infoModalOff}
-                    >
-                        <p>확인</p>
-                    </div>
-                </div>
-            </div>
         </div>
     );
 }
