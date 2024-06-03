@@ -21,12 +21,17 @@ const Footer = () => {
                 </p>
                 <p>
                     <span>
-                        <i>개</i>
-                        <i>발</i>
-                        <i>기</i>
-                        <i>간</i>
+                        <i>후</i>
+                        <i>원</i>
                     </span>
-                    : 2주
+                    : 312-0201-2114-41(농협)
+                </p>
+                <p>
+                    <span>
+                        <i>문</i>
+                        <i>의</i>
+                    </span>
+                    : jiwang0917@naver.com
                 </p>
             </div>
         </div>
