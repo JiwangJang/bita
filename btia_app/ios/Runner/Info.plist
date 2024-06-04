@@ -35,8 +35,6 @@
 	<string>본 앱은 사진촬영 앱으로 앱 사용을 위해 필요합니다</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>기존에 찍어둔 사진들을 서버로 보내기위해 필요합니다</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>개인별 사진 분류를 위해 개인 코드가 필요합니다</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
