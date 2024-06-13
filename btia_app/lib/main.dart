@@ -8,6 +8,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,6 +45,7 @@ Future<void> main() async {
     file.writeAsStringSync(code);
   }
 
+  MobileAds.instance.initialize();
   // 세로모드고정
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
