@@ -7,6 +7,7 @@ import 'package:btia_app/view/photosWidget/custom_toast.dart';
 import 'package:btia_app/view/photosWidget/photolist_view.dart';
 import 'package:btia_app/view/photosWidget/save_btn.dart';
 import 'package:btia_app/view/photosWidget/upload_btn.dart';
+import 'package:btia_app/view/layoutWidget/util_modal.dart';
 import 'package:btia_app/view/photosWidget/uploading_indicator.dart';
 import 'package:flutter/material.dart';
 
@@ -19,9 +20,12 @@ class Photos extends StatefulWidget {
 
 class _PhotosState extends State<Photos> {
   bool toast = false;
-  bool modal = false;
+  bool confirmModal = false;
+  bool uploadModal = false;
   String toastMainMessage = '';
   String toastSubMessage = '';
+  String uploadModalTitle = '';
+  String uploadModalContent = '';
 
   void toastOn(String mainMessage, String subMessage) {
     setState(() {
@@ -37,15 +41,29 @@ class _PhotosState extends State<Photos> {
     });
   }
 
-  void modalOn() {
+  void confirmModalOn() {
     setState(() {
-      modal = true;
+      confirmModal = true;
     });
   }
 
-  void modalOff() {
+  void confirmModalOff() {
     setState(() {
-      modal = false;
+      confirmModal = false;
+    });
+  }
+
+  void uploadModalOn(String title, String content) {
+    setState(() {
+      uploadModal = true;
+      uploadModalTitle = title;
+      uploadModalContent = content;
+    });
+  }
+
+  void uploadModalOff() {
+    setState(() {
+      uploadModal = false;
     });
   }
 
@@ -67,7 +85,7 @@ class _PhotosState extends State<Photos> {
             // 사진 목록(갤러리추가버튼도 있음)
             Positioned.fill(
                 child: PhotoListView(
-              modalOnFunc: modalOn,
+              modalOnFunc: confirmModalOn,
               toastOn: toastOn,
             )),
             // 업로드버튼
@@ -85,7 +103,7 @@ class _PhotosState extends State<Photos> {
                     width: 12,
                   ),
                   UploadBtn(
-                    toastOnFunc: toastOn,
+                    modalOn: uploadModalOn,
                   ),
                 ],
               ),
@@ -99,13 +117,21 @@ class _PhotosState extends State<Photos> {
               child: AddingIndicator(),
             ),
             // 삭제할 때 모달
-            Positioned.fill(
-              child: modal
-                  ? ConfirmModal(
-                      cancelFunc: modalOff,
-                    )
-                  : const SizedBox(),
-            ),
+            if (confirmModal)
+              Positioned.fill(
+                child: ConfirmModal(
+                  cancelFunc: confirmModalOff,
+                ),
+              ),
+            // 업로드 성공 모달
+            if (uploadModal)
+              Positioned.fill(
+                child: UtilModal(
+                  title: uploadModalTitle,
+                  content: uploadModalContent,
+                  modalOff: uploadModalOff,
+                ),
+              ),
             // 커스텀 토스트
             AnimatedPositioned(
               left: 0,

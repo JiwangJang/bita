@@ -32,7 +32,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-9383754596343414~1585948099</string>
+	<string>ca-app-pub-9383754596343414~3223135840</string>
 	<key>NSCameraUsageDescription</key>
 	<string>본 앱은 사진촬영 앱으로 앱 사용을 위해 필요합니다</string>
 	<key>NSPhotoLibraryUsageDescription</key>
