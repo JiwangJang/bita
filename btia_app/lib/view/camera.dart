@@ -193,7 +193,7 @@ Future<Map<String, bool>> versionChecker() async {
         'force': true,
       };
     } else if (int.parse(originMinor) < int.parse(latestMinor) &&
-        int.parse(originMajor) < int.parse(latestMajor)) {
+        int.parse(originMajor) == int.parse(latestMajor)) {
       prefs.setInt('checkDate', DateTime.now().day);
       return {
         'update': true,

@@ -51,7 +51,9 @@ class _CameraBottomBarState extends State<CameraBottomBar> {
                       ],
                     ),
                   ),
-                  CustomtakePictureBtn(pictureFunc: data.takePicture),
+                  CustomtakePictureBtn(
+                    pictureFunc: data.takePicture,
+                  ),
                   GestureDetector(
                     onTap: () => context.push('/code'),
                     child: const Column(
@@ -83,28 +85,25 @@ class _CameraBottomBarState extends State<CameraBottomBar> {
 class CustomtakePictureBtn extends StatelessWidget {
   const CustomtakePictureBtn({required this.pictureFunc, super.key});
   final Future<void> Function() pictureFunc;
+  // final AudioPlayer player;
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) {},
-      child: Consumer<PhotosModel>(builder: (_, photoData, child) {
-        return GestureDetector(
-          onTap: () async => await pictureFunc(),
-          child: Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-                border: Border.all(
-                    color: const Color.fromARGB(255, 255, 107, 0),
-                    width: 5,
-                    style: BorderStyle.solid),
-                borderRadius: BorderRadius.circular(100),
-                color: const Color.fromARGB(255, 255, 255, 255)),
-          ),
-        );
-      }),
-    );
+    return Consumer<PhotosModel>(builder: (_, photoData, child) {
+      return GestureDetector(
+        onTap: () async => await pictureFunc(),
+        child: Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+              border: Border.all(
+                  color: const Color.fromARGB(255, 255, 107, 0),
+                  width: 5,
+                  style: BorderStyle.solid),
+              borderRadius: BorderRadius.circular(100),
+              color: const Color.fromARGB(255, 255, 255, 255)),
+        ),
+      );
+    });
   }
 }
