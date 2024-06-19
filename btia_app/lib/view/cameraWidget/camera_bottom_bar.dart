@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:btia_app/model/photos_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:soundpool/soundpool.dart';
 
 class CameraBottomBar extends StatefulWidget {
   const CameraBottomBar({super.key});
@@ -82,16 +85,42 @@ class _CameraBottomBarState extends State<CameraBottomBar> {
   }
 }
 
-class CustomtakePictureBtn extends StatelessWidget {
+class CustomtakePictureBtn extends StatefulWidget {
   const CustomtakePictureBtn({required this.pictureFunc, super.key});
   final Future<void> Function() pictureFunc;
-  // final AudioPlayer player;
+
+  @override
+  State<CustomtakePictureBtn> createState() => _CustomtakePictureBtnState();
+}
+
+class _CustomtakePictureBtnState extends State<CustomtakePictureBtn> {
+  final Soundpool _pool =
+      Soundpool.fromOptions(options: SoundpoolOptions.kDefault);
+  int? soundId;
+
+  loadSound() async {
+    soundId =
+        await rootBundle.load("assets/shutter.wav").then((ByteData soundData) {
+      return _pool.load(soundData);
+    });
+  }
+
+  @override
+  void initState() {
+    loadSound();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<PhotosModel>(builder: (_, photoData, child) {
       return GestureDetector(
-        onTap: () async => await pictureFunc(),
+        onTap: () async {
+          if (soundId != null && Platform.isIOS) {
+            await _pool.play(soundId!);
+          }
+          await widget.pictureFunc();
+        },
         child: Container(
           width: 80,
           height: 80,
