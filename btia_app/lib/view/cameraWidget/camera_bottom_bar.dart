@@ -1,20 +1,13 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:btia_app/model/photos_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:native_camera_sound/native_camera_sound.dart';
 import 'package:provider/provider.dart';
-import 'package:soundpool/soundpool.dart';
 
-class CameraBottomBar extends StatefulWidget {
+class CameraBottomBar extends StatelessWidget {
   const CameraBottomBar({super.key});
 
-  @override
-  State<CameraBottomBar> createState() => _CameraBottomBarState();
-}
-
-class _CameraBottomBarState extends State<CameraBottomBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -85,41 +78,17 @@ class _CameraBottomBarState extends State<CameraBottomBar> {
   }
 }
 
-class CustomtakePictureBtn extends StatefulWidget {
+class CustomtakePictureBtn extends StatelessWidget {
   const CustomtakePictureBtn({required this.pictureFunc, super.key});
   final Future<void> Function() pictureFunc;
-
-  @override
-  State<CustomtakePictureBtn> createState() => _CustomtakePictureBtnState();
-}
-
-class _CustomtakePictureBtnState extends State<CustomtakePictureBtn> {
-  final Soundpool _pool =
-      Soundpool.fromOptions(options: SoundpoolOptions.kDefault);
-  int? soundId;
-
-  loadSound() async {
-    soundId =
-        await rootBundle.load("assets/shutter.wav").then((ByteData soundData) {
-      return _pool.load(soundData);
-    });
-  }
-
-  @override
-  void initState() {
-    loadSound();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<PhotosModel>(builder: (_, photoData, child) {
       return GestureDetector(
         onTap: () async {
-          if (soundId != null && Platform.isIOS) {
-            await _pool.play(soundId!);
-          }
-          await widget.pictureFunc();
+          NativeCameraSound.playShutter();
+          await pictureFunc();
         },
         child: Container(
           width: 80,
