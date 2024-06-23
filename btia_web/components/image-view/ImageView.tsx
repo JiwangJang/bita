@@ -95,7 +95,7 @@ export default function mageView({ cookieUserCode }: { cookieUserCode: string })
             return canvas.toDataURL("image/jpeg");
         });
 
-        if (confirm("압축파일로 다운받으시겠습니까?")) {
+        if (confirm("압축파일로 다운받으시겠습니까? 취소를 누르시면 개별파일로 다운받아집니다.")) {
             // 압축파일로
             const zip = new JSZip();
             base64Images.forEach((base64: string, index: number) => {
