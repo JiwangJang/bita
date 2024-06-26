@@ -38,8 +38,7 @@ class UploadBtn extends StatelessWidget {
                       ad.show();
                     },
                     onAdFailedToLoad: (err) {
-                      print(
-                          'Failed to load an interstitial ad: ${err.message}');
+                      return;
                     },
                   ),
                 );
