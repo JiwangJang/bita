@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:btia_app/ad_helper.dart';
 import 'package:btia_app/model/photos_model.dart';
 import 'package:btia_app/view/layoutWidget/button.dart';
@@ -30,18 +32,20 @@ class UploadBtn extends StatelessWidget {
               bgColor: const Color.fromRGBO(255, 107, 0, 1),
               btnTitle: "업로드",
               onTapFunc: () async {
-                await InterstitialAd.load(
-                  adUnitId: AdHelper.interstitialAdUnitId,
-                  request: const AdRequest(),
-                  adLoadCallback: InterstitialAdLoadCallback(
-                    onAdLoaded: (ad) {
-                      ad.show();
-                    },
-                    onAdFailedToLoad: (err) {
-                      return;
-                    },
-                  ),
-                );
+                if (Platform.isAndroid) {
+                  await InterstitialAd.load(
+                    adUnitId: AdHelper.interstitialAdUnitId,
+                    request: const AdRequest(),
+                    adLoadCallback: InterstitialAdLoadCallback(
+                      onAdLoaded: (ad) {
+                        ad.show();
+                      },
+                      onAdFailedToLoad: (err) {
+                        return;
+                      },
+                    ),
+                  );
+                }
 
                 if (data.isAdding) {
                   return;

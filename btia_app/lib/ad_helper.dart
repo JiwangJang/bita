@@ -30,9 +30,9 @@ class AdHelper {
   // 배너광고
   static String get bannerAdUnitId {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-9383754596343414/2603516295';
+      return 'ca-app-pub-7430534869579134/9759162561';
     } else if (Platform.isIOS) {
-      return 'ca-app-pub-9383754596343414/1983024609';
+      return '';
     } else {
       throw UnsupportedError('Unsupported platform');
     }
@@ -41,22 +41,11 @@ class AdHelper {
   // 전면광고
   static String get interstitialAdUnitId {
     if (Platform.isAndroid) {
-      return "ca-app-pub-9383754596343414/4649211235";
+      return "ca-app-pub-7430534869579134/5028730009";
     } else if (Platform.isIOS) {
-      return "ca-app-pub-9383754596343414/1903133551";
+      return "";
     } else {
       throw UnsupportedError("Unsupported platform");
     }
   }
 }
-
-
-/**
- * 안드로이드 
- * 전면 ca-app-pub-9383754596343414/4649211235
- * 배너 ca-app-pub-9383754596343414/2603516295
- * 
- * 아이폰
- * 전면 ca-app-pub-9383754596343414/1903133551
- * 배너 ca-app-pub-9383754596343414/1983024609
- */
